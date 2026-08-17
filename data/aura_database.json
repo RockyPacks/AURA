@@ -1,0 +1,350 @@
+{
+  "version": 1,
+  "user": {
+    "id": "user_morokolo",
+    "name": "Morokolo",
+    "preferences": {
+      "favoriteColors": [
+        "#1E293B",
+        "#334155",
+        "#D97706",
+        "#FFFFFF",
+        "#1E1B4B"
+      ],
+      "avoidColors": [
+        "#FF007F",
+        "#39FF14"
+      ],
+      "preferredFormalityRange": [
+        4,
+        8
+      ],
+      "favoriteBrands": [
+        "Acne Studios",
+        "A.P.C.",
+        "Theory",
+        "COS",
+        "Common Projects"
+      ],
+      "fabricPreferences": [
+        "Virgin Wool",
+        "Cashmere",
+        "Organic Cotton",
+        "Selvedge Denim"
+      ],
+      "aestheticArchetype": "Quiet Luxury & Modern Minimalist"
+    }
+  },
+  "wardrobe": [
+    {
+      "id": "item_test_1786989276719",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-17T17:54:36.719Z",
+      "createdAt": "2026-08-17T17:54:36.721Z",
+      "updatedAt": "2026-08-17T17:54:36.724Z",
+      "lastWorn": "2026-08-17T17:54:36.724Z"
+    },
+    {
+      "id": "item_test_1786989253249",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-17T17:54:13.249Z",
+      "createdAt": "2026-08-17T17:54:13.252Z",
+      "updatedAt": "2026-08-17T17:54:13.253Z",
+      "lastWorn": "2026-08-17T17:54:13.253Z"
+    },
+    {
+      "id": "item-1",
+      "name": "Structured Italian Wool Blazer",
+      "category": "Outerwear",
+      "subcategory": "Blazer",
+      "colorPrimary": "#1E293B",
+      "colorSecondary": "#0F172A",
+      "pattern": "Solid",
+      "material": "100% Virgin Wool",
+      "brand": "Acne Studios",
+      "formalityScore": 9,
+      "seasonality": [
+        "Fall",
+        "Winter",
+        "Spring"
+      ],
+      "estimatedValueUSD": 520,
+      "condition": "Excellent",
+      "timesWorn": 18,
+      "dateAdded": "2026-05-10",
+      "imageUrl": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop&q=80",
+      "status": "clean",
+      "createdAt": "2026-05-10",
+      "updatedAt": "2026-08-17T17:54:36.725Z",
+      "isDirty": false
+    },
+    {
+      "id": "item-2",
+      "name": "Heavyweight Organic Cotton Tee",
+      "category": "Tops",
+      "subcategory": "T-Shirt",
+      "colorPrimary": "#F8FAFC",
+      "pattern": "Solid",
+      "material": "100% Organic Cotton",
+      "brand": "Uniqlo U",
+      "formalityScore": 3,
+      "seasonality": [
+        "Spring",
+        "Summer",
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 25,
+      "condition": "Good",
+      "timesWorn": 42,
+      "dateAdded": "2026-01-15",
+      "imageUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80",
+      "status": "clean",
+      "createdAt": "2026-01-15",
+      "updatedAt": "2026-08-17T17:54:13.251Z"
+    },
+    {
+      "id": "item-3",
+      "name": "Japanese Selvedge Denim Trousers",
+      "category": "Bottoms",
+      "subcategory": "Jeans",
+      "colorPrimary": "#1E1B4B",
+      "pattern": "Raw Denim",
+      "material": "14oz Selvedge Denim",
+      "brand": "A.P.C.",
+      "formalityScore": 6,
+      "seasonality": [
+        "Fall",
+        "Winter",
+        "Spring"
+      ],
+      "estimatedValueUSD": 240,
+      "condition": "Excellent",
+      "timesWorn": 28,
+      "dateAdded": "2026-03-02",
+      "imageUrl": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&auto=format&fit=crop&q=80",
+      "status": "clean",
+      "createdAt": "2026-03-02",
+      "updatedAt": "2026-08-17T17:54:36.724Z",
+      "lastWorn": "2026-08-17T17:54:36.724Z"
+    },
+    {
+      "id": "item-4",
+      "name": "Minimalist Leather Low-Top Sneakers",
+      "category": "Shoes",
+      "subcategory": "Sneakers",
+      "colorPrimary": "#FFFFFF",
+      "pattern": "Solid",
+      "material": "Calfskin Leather",
+      "brand": "Common Projects",
+      "formalityScore": 5,
+      "seasonality": [
+        "Spring",
+        "Summer",
+        "Fall"
+      ],
+      "estimatedValueUSD": 415,
+      "condition": "Good",
+      "timesWorn": 66,
+      "dateAdded": "2025-11-20",
+      "imageUrl": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&auto=format&fit=crop&q=80",
+      "status": "clean",
+      "createdAt": "2025-11-20",
+      "updatedAt": "2026-08-17T17:54:36.724Z",
+      "lastWorn": "2026-08-17T17:54:36.724Z"
+    },
+    {
+      "id": "item-5",
+      "name": "Ribbed Cashmere Turtleneck Sweater",
+      "category": "Tops",
+      "subcategory": "Sweater",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "COS",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 190,
+      "condition": "Excellent",
+      "timesWorn": 12,
+      "dateAdded": "2026-02-14",
+      "imageUrl": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&auto=format&fit=crop&q=80",
+      "status": "clean",
+      "createdAt": "2026-02-14",
+      "updatedAt": "2026-08-17T17:54:13.251Z"
+    },
+    {
+      "id": "item-6",
+      "name": "Pleated Wide-Leg Tailored Trousers",
+      "category": "Bottoms",
+      "subcategory": "Trousers",
+      "colorPrimary": "#334155",
+      "pattern": "Solid",
+      "material": "Wool Blend",
+      "brand": "Theory",
+      "formalityScore": 8,
+      "seasonality": [
+        "Spring",
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 295,
+      "condition": "Excellent",
+      "timesWorn": 15,
+      "dateAdded": "2026-04-10",
+      "imageUrl": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&auto=format&fit=crop&q=80",
+      "status": "clean",
+      "createdAt": "2026-04-10",
+      "updatedAt": "2026-08-17T17:54:13.251Z"
+    },
+    {
+      "id": "item-7",
+      "name": "Handcrafted Chelsea Boots",
+      "category": "Shoes",
+      "subcategory": "Boots",
+      "colorPrimary": "#451A03",
+      "pattern": "Solid",
+      "material": "Full-Grain Leather",
+      "brand": "RM Williams",
+      "formalityScore": 8,
+      "seasonality": [
+        "Fall",
+        "Winter",
+        "Spring"
+      ],
+      "estimatedValueUSD": 549,
+      "condition": "Excellent",
+      "timesWorn": 22,
+      "dateAdded": "2025-12-01",
+      "imageUrl": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=600&auto=format&fit=crop&q=80",
+      "status": "clean",
+      "createdAt": "2025-12-01",
+      "updatedAt": "2026-08-17T17:54:13.251Z"
+    },
+    {
+      "id": "item-8",
+      "name": "Waterproof Minimalist Trench Coat",
+      "category": "Outerwear",
+      "subcategory": "Coat",
+      "colorPrimary": "#D4D4D8",
+      "pattern": "Solid",
+      "material": "Gabardine Cotton",
+      "brand": "Burberry",
+      "formalityScore": 8,
+      "seasonality": [
+        "Spring",
+        "Fall"
+      ],
+      "estimatedValueUSD": 1450,
+      "condition": "Excellent",
+      "timesWorn": 10,
+      "dateAdded": "2026-03-18",
+      "imageUrl": "https://images.unsplash.com/photo-1544441893-675973e31985?w=600&auto=format&fit=crop&q=80",
+      "status": "clean",
+      "createdAt": "2026-03-18",
+      "updatedAt": "2026-08-17T17:54:36.724Z",
+      "lastWorn": "2026-08-17T17:54:36.724Z"
+    }
+  ],
+  "wearEvents": [
+    {
+      "outfitId": "outfit-det-1786989276723-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1786989276719",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1786989276724",
+      "timestamp": "2026-08-17T17:54:36.724Z"
+    },
+    {
+      "outfitId": "outfit-det-1786989253253-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1786989253249",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1786989253253",
+      "timestamp": "2026-08-17T17:54:13.253Z"
+    },
+    {
+      "id": "wear-seed-1",
+      "outfitId": "outfit-seed-1",
+      "outfitTitle": "Signature Streetwear Luxe",
+      "itemIds": [
+        "item-2",
+        "item-3",
+        "item-4"
+      ],
+      "timestamp": "2026-08-15T17:54:13.251Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Casual Coffee",
+        "mood": "Relaxed",
+        "location": "Johannesburg",
+        "formalityPreference": 5
+      },
+      "feedback": "loved"
+    }
+  ],
+  "shoppingHistory": [],
+  "updatedAt": "2026-08-17T17:54:36.725Z"
+}

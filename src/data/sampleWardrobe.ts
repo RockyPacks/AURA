@@ -1,0 +1,141 @@
+import { WardrobeItem } from '../types';
+
+export const INITIAL_WARDROBE_ITEMS: WardrobeItem[] = [
+  {
+    id: "item-1",
+    name: "Structured Italian Wool Blazer",
+    category: "Outerwear",
+    subcategory: "Blazer",
+    colorPrimary: "#1E293B", // Navy slate
+    colorSecondary: "#0F172A",
+    pattern: "Solid",
+    material: "100% Virgin Wool",
+    brand: "Acne Studios",
+    formalityScore: 9,
+    seasonality: ["Fall", "Winter", "Spring"],
+    estimatedValueUSD: 520,
+    condition: "Excellent",
+    timesWorn: 18,
+    dateAdded: "2026-05-10",
+    imageUrl: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-2",
+    name: "Heavyweight Organic Cotton Tee",
+    category: "Tops",
+    subcategory: "T-Shirt",
+    colorPrimary: "#F8FAFC", // Off white
+    pattern: "Solid",
+    material: "100% Organic Cotton",
+    brand: "Uniqlo U",
+    formalityScore: 3,
+    seasonality: ["Spring", "Summer", "Fall", "Winter"],
+    estimatedValueUSD: 25,
+    condition: "Good",
+    timesWorn: 42,
+    dateAdded: "2026-01-15",
+    imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-3",
+    name: "Japanese Selvedge Denim Trousers",
+    category: "Bottoms",
+    subcategory: "Jeans",
+    colorPrimary: "#1E1B4B", // Indigo
+    pattern: "Raw Denim",
+    material: "14oz Selvedge Denim",
+    brand: "A.P.C.",
+    formalityScore: 6,
+    seasonality: ["Fall", "Winter", "Spring"],
+    estimatedValueUSD: 240,
+    condition: "Excellent",
+    timesWorn: 26,
+    dateAdded: "2026-03-02",
+    imageUrl: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-4",
+    name: "Minimalist Leather Low-Top Sneakers",
+    category: "Shoes",
+    subcategory: "Sneakers",
+    colorPrimary: "#FFFFFF",
+    pattern: "Solid",
+    material: "Calfskin Leather",
+    brand: "Common Projects",
+    formalityScore: 5,
+    seasonality: ["Spring", "Summer", "Fall"],
+    estimatedValueUSD: 415,
+    condition: "Good",
+    timesWorn: 64,
+    dateAdded: "2025-11-20",
+    imageUrl: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-5",
+    name: "Ribbed Cashmere Turtleneck Sweater",
+    category: "Tops",
+    subcategory: "Sweater",
+    colorPrimary: "#D97706", // Camel / Amber
+    pattern: "Ribbed",
+    material: "100% Cashmere",
+    brand: "COS",
+    formalityScore: 7,
+    seasonality: ["Fall", "Winter"],
+    estimatedValueUSD: 190,
+    condition: "Excellent",
+    timesWorn: 12,
+    dateAdded: "2026-02-14",
+    imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-6",
+    name: "Pleated Wide-Leg Tailored Trousers",
+    category: "Bottoms",
+    subcategory: "Trousers",
+    colorPrimary: "#334155", // Charcoal
+    pattern: "Solid",
+    material: "Wool Blend",
+    brand: "Theory",
+    formalityScore: 8,
+    seasonality: ["Spring", "Fall", "Winter"],
+    estimatedValueUSD: 295,
+    condition: "Excellent",
+    timesWorn: 15,
+    dateAdded: "2026-04-10",
+    imageUrl: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-7",
+    name: "Handcrafted Chelsea Boots",
+    category: "Shoes",
+    subcategory: "Boots",
+    colorPrimary: "#451A03", // Dark Brown Leather
+    pattern: "Solid",
+    material: "Full-Grain Leather",
+    brand: "RM Williams",
+    formalityScore: 8,
+    seasonality: ["Fall", "Winter", "Spring"],
+    estimatedValueUSD: 549,
+    condition: "Excellent",
+    timesWorn: 22,
+    dateAdded: "2025-12-01",
+    imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-8",
+    name: "Waterproof Minimalist Trench Coat",
+    category: "Outerwear",
+    subcategory: "Coat",
+    colorPrimary: "#D4D4D8", // Light Stone
+    pattern: "Solid",
+    material: "Gabardine Cotton",
+    brand: "Burberry",
+    formalityScore: 8,
+    seasonality: ["Spring", "Fall"],
+    estimatedValueUSD: 1450,
+    condition: "Excellent",
+    timesWorn: 8,
+    dateAdded: "2026-03-18",
+    imageUrl: "https://images.unsplash.com/photo-1544441893-675973e31985?w=600&auto=format&fit=crop&q=80"
+  }
+];
