@@ -1,6 +1,0 @@
-{
-  "name": "AURA",
-  "description": "Personal Fashion Intelligence — An invisible personal stylist, wardrobe memory layer, context-aware outfit engine, and shopping advisor.",
-  "requestFramePermissions": ["camera"],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
