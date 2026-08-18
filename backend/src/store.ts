@@ -1,8 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { WardrobeItem, WearEvent, ShoppingAnalysis, StylePreference, ProfileAnalytics } from '../src/types';
-import { INITIAL_WARDROBE_ITEMS } from '../src/data/sampleWardrobe';
+import { WardrobeItem, WearEvent, ShoppingAnalysis, StylePreference, ProfileAnalytics } from './types.js';
 
 const DB_DIR = path.resolve(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'aura_database.json');
@@ -29,6 +27,154 @@ const DEFAULT_PREFERENCES: StylePreference = {
   aestheticArchetype: 'Quiet Luxury & Modern Minimalist'
 };
 
+const SEED_WARDROBE_ITEMS: WardrobeItem[] = [
+  {
+    id: "item-1",
+    name: "Structured Italian Wool Blazer",
+    category: "Outerwear",
+    subcategory: "Blazer",
+    colorPrimary: "#1E293B",
+    colorSecondary: "#0F172A",
+    pattern: "Solid",
+    material: "100% Virgin Wool",
+    brand: "Acne Studios",
+    formalityScore: 9,
+    seasonality: ["Fall", "Winter", "Spring"],
+    estimatedValueUSD: 520,
+    condition: "Excellent",
+    timesWorn: 18,
+    status: "clean",
+    dateAdded: "2026-05-10",
+    imageUrl: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-2",
+    name: "Heavyweight Organic Cotton Tee",
+    category: "Tops",
+    subcategory: "T-Shirt",
+    colorPrimary: "#F8FAFC",
+    pattern: "Solid",
+    material: "100% Organic Cotton",
+    brand: "Uniqlo U",
+    formalityScore: 3,
+    seasonality: ["Spring", "Summer", "Fall", "Winter"],
+    estimatedValueUSD: 25,
+    condition: "Good",
+    timesWorn: 42,
+    status: "clean",
+    dateAdded: "2026-01-15",
+    imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-3",
+    name: "Japanese Selvedge Denim Trousers",
+    category: "Bottoms",
+    subcategory: "Jeans",
+    colorPrimary: "#1E1B4B",
+    pattern: "Raw Denim",
+    material: "14oz Selvedge Denim",
+    brand: "A.P.C.",
+    formalityScore: 6,
+    seasonality: ["Fall", "Winter", "Spring"],
+    estimatedValueUSD: 240,
+    condition: "Excellent",
+    timesWorn: 26,
+    status: "clean",
+    dateAdded: "2026-03-02",
+    imageUrl: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-4",
+    name: "Minimalist Leather Low-Top Sneakers",
+    category: "Shoes",
+    subcategory: "Sneakers",
+    colorPrimary: "#FFFFFF",
+    pattern: "Solid",
+    material: "Calfskin Leather",
+    brand: "Common Projects",
+    formalityScore: 5,
+    seasonality: ["Spring", "Summer", "Fall"],
+    estimatedValueUSD: 415,
+    condition: "Good",
+    timesWorn: 64,
+    status: "clean",
+    dateAdded: "2025-11-20",
+    imageUrl: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-5",
+    name: "Ribbed Cashmere Turtleneck Sweater",
+    category: "Tops",
+    subcategory: "Sweater",
+    colorPrimary: "#D97706",
+    pattern: "Ribbed",
+    material: "100% Cashmere",
+    brand: "COS",
+    formalityScore: 7,
+    seasonality: ["Fall", "Winter"],
+    estimatedValueUSD: 190,
+    condition: "Excellent",
+    timesWorn: 12,
+    status: "clean",
+    dateAdded: "2026-02-14",
+    imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-6",
+    name: "Pleated Wide-Leg Tailored Trousers",
+    category: "Bottoms",
+    subcategory: "Trousers",
+    colorPrimary: "#334155",
+    pattern: "Solid",
+    material: "Wool Blend",
+    brand: "Theory",
+    formalityScore: 8,
+    seasonality: ["Spring", "Fall", "Winter"],
+    estimatedValueUSD: 295,
+    condition: "Excellent",
+    timesWorn: 15,
+    status: "clean",
+    dateAdded: "2026-04-10",
+    imageUrl: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-7",
+    name: "Handcrafted Chelsea Boots",
+    category: "Shoes",
+    subcategory: "Boots",
+    colorPrimary: "#451A03",
+    pattern: "Solid",
+    material: "Full-Grain Leather",
+    brand: "RM Williams",
+    formalityScore: 8,
+    seasonality: ["Fall", "Winter", "Spring"],
+    estimatedValueUSD: 549,
+    condition: "Excellent",
+    timesWorn: 22,
+    status: "clean",
+    dateAdded: "2025-12-01",
+    imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "item-8",
+    name: "Waterproof Minimalist Trench Coat",
+    category: "Outerwear",
+    subcategory: "Coat",
+    colorPrimary: "#D4D4D8",
+    pattern: "Solid",
+    material: "Gabardine Cotton",
+    brand: "Burberry",
+    formalityScore: 8,
+    seasonality: ["Spring", "Fall"],
+    estimatedValueUSD: 1450,
+    condition: "Excellent",
+    timesWorn: 8,
+    status: "clean",
+    dateAdded: "2026-03-18",
+    imageUrl: "https://images.unsplash.com/photo-1544441893-675973e31985?w=600&auto=format&fit=crop&q=80"
+  }
+];
+
 function initDb(): AuraDatabaseSchema {
   if (!fs.existsSync(DB_DIR)) {
     fs.mkdirSync(DB_DIR, { recursive: true });
@@ -46,7 +192,6 @@ function initDb(): AuraDatabaseSchema {
     }
   }
 
-  // Seed default database
   const initialDb: AuraDatabaseSchema = {
     version: 1,
     user: {
@@ -54,7 +199,7 @@ function initDb(): AuraDatabaseSchema {
       name: 'Morokolo',
       preferences: DEFAULT_PREFERENCES
     },
-    wardrobe: INITIAL_WARDROBE_ITEMS.map(item => ({
+    wardrobe: SEED_WARDROBE_ITEMS.map(item => ({
       ...item,
       status: item.isDirty ? 'in_wash' : 'clean',
       createdAt: item.dateAdded || new Date().toISOString(),
@@ -109,8 +254,6 @@ function saveDb(db: AuraDatabaseSchema) {
     console.error('[AURA DB] Error persisting database:', err);
   }
 }
-
-// ----------------- Wardrobe Operations -----------------
 
 export function getAllWardrobeItems(): WardrobeItem[] {
   const db = getDb();
@@ -176,8 +319,6 @@ export function deleteWardrobeItem(id: string): boolean {
   return false;
 }
 
-// ----------------- Wear Events & Learning -----------------
-
 export function logWearEvent(event: Omit<WearEvent, 'id' | 'timestamp'>): WearEvent {
   const db = getDb();
   const now = new Date().toISOString();
@@ -187,10 +328,8 @@ export function logWearEvent(event: Omit<WearEvent, 'id' | 'timestamp'>): WearEv
     timestamp: now
   };
 
-  // 1. Persist Wear Event
   db.wearEvents = [newEvent, ...db.wearEvents];
 
-  // 2. Update all item wear counts and lastWorn timestamps
   db.wardrobe = db.wardrobe.map(item => {
     if (event.itemIds.includes(item.id)) {
       return {
@@ -212,16 +351,12 @@ export function getWearEvents(): WearEvent[] {
   return db.wearEvents;
 }
 
-// ----------------- Shopping History -----------------
-
 export function logShoppingAnalysis(analysis: ShoppingAnalysis): ShoppingAnalysis {
   const db = getDb();
   db.shoppingHistory = [analysis, ...db.shoppingHistory.slice(0, 49)];
   saveDb(db);
   return analysis;
 }
-
-// ----------------- Real Profile Analytics Calculation -----------------
 
 export function calculateRealProfileAnalytics(): ProfileAnalytics {
   const db = getDb();
@@ -234,7 +369,6 @@ export function calculateRealProfileAnalytics(): ProfileAnalytics {
   const cleanCount = wardrobe.filter(i => i.status === 'clean' || !i.isDirty).length;
   const inWashCount = wardrobe.filter(i => i.status === 'in_wash' || i.isDirty).length;
 
-  // Active items = worn at least 1 time or added recently (within 30 days)
   const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
   const activeItemsCount = wardrobe.filter(i => {
     if (i.timesWorn > 0) return true;
@@ -246,7 +380,6 @@ export function calculateRealProfileAnalytics(): ProfileAnalytics {
     ? Math.round((activeItemsCount / totalPieces) * 100) 
     : 0;
 
-  // Category breakdown
   const catMap = new Map<string, { count: number; value: number }>();
   wardrobe.forEach(item => {
     const existing = catMap.get(item.category) || { count: 0, value: 0 };
@@ -264,7 +397,6 @@ export function calculateRealProfileAnalytics(): ProfileAnalytics {
 
   const mostWornCategory = categoryBreakdown.length > 0 ? categoryBreakdown[0].category : 'Tops';
 
-  // Color frequency
   const colorMap = new Map<string, number>();
   wardrobe.forEach(item => {
     if (item.colorPrimary) {
@@ -283,7 +415,6 @@ export function calculateRealProfileAnalytics(): ProfileAnalytics {
     .sort((a, b) => (a.timesWorn || 0) - (b.timesWorn || 0))
     .slice(0, 3);
 
-  // Trust check: If under 3 wear events, label as learning phase
   const isLearningPhase = wearEvents.length < 3;
 
   return {

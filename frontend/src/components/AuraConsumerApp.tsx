@@ -248,9 +248,8 @@ export const AuraConsumerApp: React.FC = () => {
       isDirty: false,
       status: 'clean',
       dateAdded: new Date().toISOString().split('T')[0],
-      imageUrl: target.preview,
       aiMetadata: {
-        confidence: target.data.confidence || 0.88,
+        confidence: (target.data as any).confidence || target.data.aiMetadata?.confidence || 0.88,
         detectedCategory: target.data.category
       }
     };

@@ -37,6 +37,54 @@
   },
   "wardrobe": [
     {
+      "id": "item_test_1787027690475",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-18T04:34:50.475Z",
+      "createdAt": "2026-08-18T04:34:50.476Z",
+      "updatedAt": "2026-08-18T04:34:50.478Z",
+      "lastWorn": "2026-08-18T04:34:50.478Z"
+    },
+    {
+      "id": "item_test_1787027556977",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-18T04:32:36.977Z",
+      "createdAt": "2026-08-18T04:32:36.978Z",
+      "updatedAt": "2026-08-18T04:32:36.980Z",
+      "lastWorn": "2026-08-18T04:32:36.980Z"
+    },
+    {
       "id": "item_test_1786989276719",
       "name": "Cashmere Fisherman Rib Cardigan",
       "category": "Tops",
@@ -107,7 +155,7 @@
       "imageUrl": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop&q=80",
       "status": "clean",
       "createdAt": "2026-05-10",
-      "updatedAt": "2026-08-17T17:54:36.725Z",
+      "updatedAt": "2026-08-18T04:34:50.479Z",
       "isDirty": false
     },
     {
@@ -152,13 +200,13 @@
       ],
       "estimatedValueUSD": 240,
       "condition": "Excellent",
-      "timesWorn": 28,
+      "timesWorn": 30,
       "dateAdded": "2026-03-02",
       "imageUrl": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&auto=format&fit=crop&q=80",
       "status": "clean",
       "createdAt": "2026-03-02",
-      "updatedAt": "2026-08-17T17:54:36.724Z",
-      "lastWorn": "2026-08-17T17:54:36.724Z"
+      "updatedAt": "2026-08-18T04:34:50.478Z",
+      "lastWorn": "2026-08-18T04:34:50.478Z"
     },
     {
       "id": "item-4",
@@ -177,13 +225,13 @@
       ],
       "estimatedValueUSD": 415,
       "condition": "Good",
-      "timesWorn": 66,
+      "timesWorn": 68,
       "dateAdded": "2025-11-20",
       "imageUrl": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&auto=format&fit=crop&q=80",
       "status": "clean",
       "createdAt": "2025-11-20",
-      "updatedAt": "2026-08-17T17:54:36.724Z",
-      "lastWorn": "2026-08-17T17:54:36.724Z"
+      "updatedAt": "2026-08-18T04:34:50.478Z",
+      "lastWorn": "2026-08-18T04:34:50.478Z"
     },
     {
       "id": "item-5",
@@ -272,16 +320,58 @@
       ],
       "estimatedValueUSD": 1450,
       "condition": "Excellent",
-      "timesWorn": 10,
+      "timesWorn": 12,
       "dateAdded": "2026-03-18",
       "imageUrl": "https://images.unsplash.com/photo-1544441893-675973e31985?w=600&auto=format&fit=crop&q=80",
       "status": "clean",
       "createdAt": "2026-03-18",
-      "updatedAt": "2026-08-17T17:54:36.724Z",
-      "lastWorn": "2026-08-17T17:54:36.724Z"
+      "updatedAt": "2026-08-18T04:34:50.478Z",
+      "lastWorn": "2026-08-18T04:34:50.478Z"
     }
   ],
   "wearEvents": [
+    {
+      "outfitId": "outfit-det-1787027690478-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1787027690475",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1787027690478",
+      "timestamp": "2026-08-18T04:34:50.478Z"
+    },
+    {
+      "outfitId": "outfit-det-1787027556980-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1787027556977",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1787027556980",
+      "timestamp": "2026-08-18T04:32:36.980Z"
+    },
     {
       "outfitId": "outfit-det-1786989276723-0",
       "outfitTitle": "Smart Architectural Contrast",
@@ -346,5 +436,5 @@
     }
   ],
   "shoppingHistory": [],
-  "updatedAt": "2026-08-17T17:54:36.725Z"
+  "updatedAt": "2026-08-18T04:34:50.479Z"
 }

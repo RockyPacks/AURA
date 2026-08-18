@@ -4,18 +4,18 @@ import {
   updateWardrobeItem, 
   logWearEvent, 
   calculateRealProfileAnalytics 
-} from '../server/store';
+} from '../src/store.js';
 import { 
   analyzeGarmentImage, 
   generateOutfitsFromWardrobe, 
   swapOutfitItem, 
   analyzeShoppingItem 
-} from '../server/aiEngine';
-import { WardrobeItem, ContextInput } from '../src/types';
+} from '../src/aiEngine.js';
+import { WardrobeItem, ContextInput } from '../src/types.js';
 
 async function runAcceptanceTests() {
   console.log('====================================================');
-  console.log('🚀 AURA PRODUCT ACCEPTANCE TEST SUITE');
+  console.log('🚀 AURA BACKEND ACCEPTANCE TEST SUITE');
   console.log('====================================================\n');
 
   let passed = 0;
@@ -33,9 +33,7 @@ async function runAcceptanceTests() {
     }
   }
 
-  // ----------------------------------------------------
-  // TEST 1: Ingestion & Persistence
-  // ----------------------------------------------------
+  // TEST 1
   console.log('\n--- TEST 1: Ingestion & Persistence ---');
   const dummyImage = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP...';
   const parsedGarment = await analyzeGarmentImage(dummyImage);
@@ -66,11 +64,8 @@ async function runAcceptanceTests() {
   const foundSaved = itemsAfterSave.find(i => i.id === testGarment.id);
   assert(Boolean(foundSaved), 'Added garment persists in database', `Found ID: ${foundSaved?.id}`);
 
-  // ----------------------------------------------------
-  // TEST 2: Outfit Generation & Laundry Filtering
-  // ----------------------------------------------------
+  // TEST 2
   console.log('\n--- TEST 2: Outfit Engine & Laundry Exclusion ---');
-  // Mark an item as IN_WASH
   const testDirtyId = 'item-1';
   updateWardrobeItem(testDirtyId, { status: 'in_wash', isDirty: true });
 
@@ -90,9 +85,7 @@ async function runAcceptanceTests() {
   const dirtyRecommended = recommendedItems.includes(testDirtyId);
   assert(!dirtyRecommended, 'In-wash items are strictly excluded from generated outfits', `Dirty item ${testDirtyId} not in outfit: ${!dirtyRecommended}`);
 
-  // ----------------------------------------------------
-  // TEST 3: Wear Event & Memory Loop
-  // ----------------------------------------------------
+  // TEST 3
   console.log('\n--- TEST 3: Wear Event & Memory Loop ---');
   const targetOutfit = outfits[0];
   const initialWearCount = getAllWardrobeItems().find(i => i.id === targetOutfit.itemIds[0])?.timesWorn || 0;
@@ -110,18 +103,13 @@ async function runAcceptanceTests() {
   assert((updatedItem?.timesWorn || 0) === initialWearCount + 1, 'Garment wear count incremented', `New wear count: ${updatedItem?.timesWorn}`);
   assert(Boolean(updatedItem?.lastWorn), 'Garment lastWorn timestamp recorded', `Last worn: ${updatedItem?.lastWorn}`);
 
-  // ----------------------------------------------------
-  // TEST 4: Learning Loop & Rotation Penalties
-  // ----------------------------------------------------
+  // TEST 4
   console.log('\n--- TEST 4: Next Outfit Generation (Wear History Aware) ---');
   const subsequentOutfits = await generateOutfitsFromWardrobe(context);
   assert(subsequentOutfits.length > 0, 'Subsequent outfit generation succeeds with wear history');
 
-  // ----------------------------------------------------
-  // TEST 5: Garment Swapping
-  // ----------------------------------------------------
+  // TEST 5
   console.log('\n--- TEST 5: Real Garment Swapping ---');
-  // Reset dirty item for testing
   updateWardrobeItem(testDirtyId, { status: 'clean', isDirty: false });
   const allClean = getAllWardrobeItems().filter(i => !i.isDirty && i.status !== 'in_wash');
   const shoeItems = allClean.filter(i => i.category === 'Shoes');
@@ -138,9 +126,7 @@ async function runAcceptanceTests() {
     assert(true, 'Garment swapping logic verified');
   }
 
-  // ----------------------------------------------------
-  // TEST 6: Real Shopping Intelligence (No Regex Mocking)
-  // ----------------------------------------------------
+  // TEST 6
   console.log('\n--- TEST 6: Real Shopping Intelligence ---');
   const shopResult = await analyzeShoppingItem(
     'Structured Italian Wool Blazer in Navy',
@@ -151,9 +137,7 @@ async function runAcceptanceTests() {
   assert(Boolean(shopResult.costPerWear), 'Calculated real Cost-Per-Wear', `$${shopResult.costPerWear} / wear`);
   assert(Boolean(shopResult.verdict), 'Returned honest verdict', `Verdict: ${shopResult.verdict}`);
 
-  // ----------------------------------------------------
-  // TEST 7: Dynamic Profile Analytics
-  // ----------------------------------------------------
+  // TEST 7
   console.log('\n--- TEST 7: Real Profile Analytics ---');
   const analytics = calculateRealProfileAnalytics();
   assert(analytics.totalPieces > 0, 'Real wardrobe piece count calculated', `Total pieces: ${analytics.totalPieces}`);

@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
-import { WardrobeItem, ContextInput, GeneratedOutfit, ShoppingAnalysis, GarmentCategory } from '../src/types';
-import { getAllWardrobeItems, getWearEvents } from './store';
+import { WardrobeItem, ContextInput, GeneratedOutfit, ShoppingAnalysis, GarmentCategory } from './types.js';
+import { getAllWardrobeItems, getWearEvents } from './store.js';
 
 function getAiClient(): GoogleGenAI | null {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -9,8 +9,6 @@ function getAiClient(): GoogleGenAI | null {
   }
   return new GoogleGenAI({ apiKey });
 }
-
-// ----------------- PRIORITY 2: REAL GARMENT INTELLIGENCE -----------------
 
 export interface AnalyzedGarmentResult {
   name: string;
@@ -109,7 +107,6 @@ Return ONLY valid JSON matching this schema:
     }
   }
 
-  // Graceful deterministic analysis fallback
   return {
     name: 'Fine Knit Merino Crewneck',
     category: 'Tops',
@@ -117,7 +114,7 @@ Return ONLY valid JSON matching this schema:
     colorPrimary: '#27272A',
     pattern: 'Solid',
     material: '100% Merino Wool',
-    brand: null, // Brand null when not confirmed
+    brand: null,
     silhouette: 'Relaxed Tailored',
     fit: 'Regular',
     formalityScore: 6,
@@ -129,17 +126,13 @@ Return ONLY valid JSON matching this schema:
   };
 }
 
-// ----------------- PRIORITY 3: REAL HYBRID OUTFIT GENERATION ENGINE -----------------
-
 export async function generateOutfitsFromWardrobe(context: ContextInput): Promise<GeneratedOutfit[]> {
   const wardrobe = getAllWardrobeItems();
   const wearEvents = getWearEvents();
 
-  // 1. Filter out items in wash or unavailable
   const cleanWardrobe = wardrobe.filter(item => item.status !== 'in_wash' && !item.isDirty);
   
   if (cleanWardrobe.length < 2) {
-    // Insufficient clean garments
     return [
       {
         id: 'outfit-empty',
@@ -155,7 +148,6 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
     ];
   }
 
-  // 2. Identify recently worn items (last 48 hours) to encourage rotation
   const recentWearCutoff = Date.now() - 48 * 60 * 60 * 1000;
   const recentlyWornIds = new Set<string>();
   wearEvents.forEach(e => {
@@ -164,7 +156,6 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
     }
   });
 
-  // Group by categories
   const tops = cleanWardrobe.filter(i => i.category === 'Tops');
   const bottoms = cleanWardrobe.filter(i => i.category === 'Bottoms');
   const outerwear = cleanWardrobe.filter(i => i.category === 'Outerwear');
@@ -172,12 +163,10 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
 
   const candidateCombinations: { items: WardrobeItem[]; score: number; notes: string[] }[] = [];
 
-  // Parse context temperature
   const tempNum = parseInt(context.temperature.replace(/[^0-9]/g, ''), 10) || 18;
   const isColdOrCool = tempNum <= 20 || context.weather === 'Rain' || context.weather === 'Windy';
   const targetFormality = context.formalityPreference || (context.occasion === 'Work Pitch' ? 8 : context.occasion === 'Evening Dinner' ? 7 : 4);
 
-  // Generate candidate permutations
   for (const top of (tops.length > 0 ? tops : cleanWardrobe.slice(0, 2))) {
     for (const bottom of (bottoms.length > 0 ? bottoms : cleanWardrobe.slice(0, 2))) {
       if (top.id === bottom.id) continue;
@@ -188,7 +177,6 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
         const currentItems: WardrobeItem[] = [top, bottom];
         if (shoe) currentItems.push(shoe);
 
-        // Add outerwear if cold
         if (isColdOrCool && outerwear.length > 0) {
           const compatibleOuter = outerwear.find(o => !recentlyWornIds.has(o.id)) || outerwear[0];
           if (compatibleOuter && !currentItems.some(i => i.id === compatibleOuter.id)) {
@@ -196,11 +184,9 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
           }
         }
 
-        // Calculate heuristic score
         let score = 80;
         const notes: string[] = [];
 
-        // Rotation bonus/penalty
         const hasRecentlyWorn = currentItems.some(i => recentlyWornIds.has(i.id));
         if (!hasRecentlyWorn) {
           score += 10;
@@ -209,7 +195,6 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
           score -= 10;
         }
 
-        // Formality closeness
         const avgFormality = currentItems.reduce((acc, i) => acc + i.formalityScore, 0) / currentItems.length;
         const formalityDiff = Math.abs(avgFormality - targetFormality);
         if (formalityDiff <= 1.5) {
@@ -219,7 +204,6 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
           score -= formalityDiff * 4;
         }
 
-        // Weather calibration
         if (isColdOrCool) {
           const hasWarmLayers = currentItems.some(i => i.material.includes('Wool') || i.material.includes('Cashmere') || i.category === 'Outerwear');
           if (hasWarmLayers) {
@@ -233,11 +217,9 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
     }
   }
 
-  // Sort candidates by score
   candidateCombinations.sort((a, b) => b.score - a.score);
   const topCandidates = candidateCombinations.slice(0, 4);
 
-  // If no candidates found, fallback to available pieces
   if (topCandidates.length === 0) {
     topCandidates.push({
       items: cleanWardrobe.slice(0, 3),
@@ -246,7 +228,6 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
     });
   }
 
-  // 3. Stylistic AI synthesis with Gemini
   const ai = getAiClient();
   if (ai) {
     try {
@@ -258,7 +239,7 @@ Context:
 - Occasion: ${context.occasion}
 - Mood: ${context.mood}
 
-Below are 3 algorithmically pre-filtered candidate outfit ensembles from the user's real wardrobe:
+Below are candidate outfit ensembles from user's real wardrobe:
 ${JSON.stringify(topCandidates.map((c, idx) => ({
   candidateId: `cand-${idx + 1}`,
   items: c.items.map(i => ({ id: i.id, name: i.name, category: i.category, material: i.material, color: i.colorPrimary, brand: i.brand, formality: i.formalityScore }))
@@ -315,7 +296,6 @@ Return ONLY valid JSON matching this schema:
     }
   }
 
-  // Deterministic Output Fallback
   return topCandidates.slice(0, 3).map((candidate, idx) => {
     const avgFormality = Math.round(candidate.items.reduce((s, i) => s + i.formalityScore, 0) / candidate.items.length);
     const title = avgFormality >= 8 
@@ -345,8 +325,6 @@ Return ONLY valid JSON matching this schema:
   });
 }
 
-// ----------------- PRIORITY 7: REAL OUTFIT SWAPPING ENGINE -----------------
-
 export function swapOutfitItem(currentItemIds: string[], targetItemId: string, replacementItemId: string): {
   updatedItemIds: string[];
   recalculatedScore: number;
@@ -363,7 +341,6 @@ export function swapOutfitItem(currentItemIds: string[], targetItemId: string, r
   const updatedIds = currentItemIds.map(id => id === targetItemId ? replacementItemId : id);
   const ensembleItems = updatedIds.map(id => wardrobe.find(w => w.id === id)).filter(Boolean) as WardrobeItem[];
 
-  // Recalculate score
   const avgFormality = ensembleItems.reduce((acc, i) => acc + i.formalityScore, 0) / ensembleItems.length;
   const recalculatedScore = Math.min(Math.round(85 + (10 - Math.abs(avgFormality - replacement.formalityScore))), 99);
 
@@ -374,8 +351,6 @@ export function swapOutfitItem(currentItemIds: string[], targetItemId: string, r
   };
 }
 
-// ----------------- PRIORITY 5: REAL SHOPPING INTELLIGENCE -----------------
-
 export async function analyzeShoppingItem(
   name: string,
   priceUSD: number,
@@ -385,7 +360,6 @@ export async function analyzeShoppingItem(
   const wardrobe = getAllWardrobeItems();
   const cleanWardrobe = wardrobe.filter(i => i.status !== 'in_wash' && !i.isDirty);
 
-  // 1. Real Duplicate Detection against active wardrobe
   const lowerName = name.toLowerCase();
   const duplicateCandidates = wardrobe.filter(existing => {
     const existingLower = existing.name.toLowerCase();
@@ -398,9 +372,6 @@ export async function analyzeShoppingItem(
   const duplicateRisk: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' = 
     duplicateCandidates.length >= 2 ? 'HIGH' : duplicateCandidates.length === 1 ? 'MEDIUM' : 'NONE';
 
-  // 2. Real Outfit Combination Unlocking Calculation
-  // An item unlocks combinations with complementary categories:
-  // e.g. a Top unlocks combos with all existing clean Bottoms x Shoes x Outerwear
   let complementaryItems: WardrobeItem[] = [];
   if (category === 'Tops') {
     complementaryItems = cleanWardrobe.filter(i => i.category === 'Bottoms' || i.category === 'Outerwear' || i.category === 'Shoes');
@@ -427,21 +398,17 @@ export async function analyzeShoppingItem(
     unlockedCount = topsCount * bottomsCount;
   }
 
-  // Cap at realistic realistic unlocked look count
   unlockedCount = Math.max(Math.min(unlockedCount, 18), 1);
 
-  // If high duplicate, unlock value is severely diminished
   if (duplicateRisk === 'HIGH') {
     unlockedCount = 0;
   } else if (duplicateRisk === 'MEDIUM') {
     unlockedCount = Math.floor(unlockedCount * 0.4);
   }
 
-  // Cost per wear: price / (unlockedCount * estimated wear frequency)
   const projectedWears = Math.max(unlockedCount * 3, 1);
   const costPerWear = (priceUSD / projectedWears).toFixed(2);
 
-  // Determine Verdict
   let verdictType: 'BUY' | 'SKIP' | 'CONSIDER' = 'BUY';
   let verdictHeadline = '';
   let verdictSub = '';
