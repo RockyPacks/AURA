@@ -128,6 +128,25 @@ async function runAcceptanceTests() {
 
   // TEST 6
   console.log('\n--- TEST 6: Real Shopping Intelligence ---');
+  addWardrobeItem({
+    id: `item_blazer_${Date.now()}`,
+    name: 'Structured Italian Wool Blazer',
+    category: 'Outerwear',
+    subcategory: 'Blazer',
+    colorPrimary: '#1E293B',
+    pattern: 'Solid',
+    material: '100% Virgin Wool',
+    brand: 'Acne Studios',
+    formalityScore: 8,
+    seasonality: ['Fall', 'Winter', 'Spring'],
+    estimatedValueUSD: 520,
+    condition: 'Excellent',
+    timesWorn: 12,
+    status: 'clean',
+    isDirty: false,
+    dateAdded: new Date().toISOString()
+  });
+
   const shopResult = await analyzeShoppingItem(
     'Structured Italian Wool Blazer in Navy',
     520,

@@ -190,13 +190,57 @@ export const AuraConsumerApp: React.FC = () => {
     }
   };
 
-  // 5. Garment Ingestion with Multi-Image Support (Priority 2)
+  // Helper to crop individual garments using bounding box (box2d: [ymin, xmin, ymax, xmax] normalized 0-1000)
+  const cropImageFromBox = (base64Image: string, box2d?: [number, number, number, number]): Promise<string> => {
+    if (!box2d || box2d.length !== 4) return Promise.resolve(base64Image);
+    const [ymin, xmin, ymax, xmax] = box2d;
+    // If box spans full image, return as is
+    if (ymin <= 25 && xmin <= 25 && ymax >= 975 && xmax >= 975) return Promise.resolve(base64Image);
+
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        try {
+          const naturalW = img.naturalWidth || img.width;
+          const naturalH = img.naturalHeight || img.height;
+
+          // Add a 5% margin around the box, clamped to image bounds
+          const padY = (ymax - ymin) * 0.05;
+          const padX = (xmax - xmin) * 0.05;
+
+          const top = Math.max(0, ((ymin - padY) / 1000) * naturalH);
+          const left = Math.max(0, ((xmin - padX) / 1000) * naturalW);
+          const bottom = Math.min(naturalH, ((ymax + padY) / 1000) * naturalH);
+          const right = Math.min(naturalW, ((xmax + padX) / 1000) * naturalW);
+
+          const cropW = Math.max(1, right - left);
+          const cropH = Math.max(1, bottom - top);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = cropW;
+          canvas.height = cropH;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return resolve(base64Image);
+
+          ctx.drawImage(img, left, top, cropW, cropH, 0, 0, cropW, cropH);
+          resolve(canvas.toDataURL('image/jpeg', 0.90));
+        } catch {
+          resolve(base64Image);
+        }
+      };
+      img.onerror = () => resolve(base64Image);
+      img.src = base64Image;
+    });
+  };
+
+  // 5. Garment Ingestion with Multi-Image & Multi-Piece Support (Priority 2)
   const handleBatchImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     setIsScanning(true);
-    setScanStatusText(`Analyzing ${files.length} garment${files.length > 1 ? 's' : ''} with AURA Vision...`);
+    setScanStatusText(`Analyzing ${files.length} photo${files.length > 1 ? 's' : ''} for garments, footwear & accessories...`);
 
     const newQueue: { preview: string; data: Partial<WardrobeItem> }[] = [];
 
@@ -204,13 +248,30 @@ export const AuraConsumerApp: React.FC = () => {
       const file = files[i];
       try {
         const base64Data = await readFileAsBase64(file);
-        setScanStatusText(`Analyzing item ${i + 1} of ${files.length}...`);
+        setScanStatusText(`AURA Vision identifying all pieces in photo ${i + 1} of ${files.length}...`);
         const result = await analyzeGarmentImageApi(base64Data, file.type);
-        const itemData = result?.detectedItems?.[0] || {};
-        newQueue.push({
-          preview: base64Data,
-          data: itemData
-        });
+        const detectedList: AnalyzedGarmentResult[] = result?.detectedItems || [];
+        
+        if (detectedList.length === 0) {
+          newQueue.push({
+            preview: base64Data,
+            data: { name: 'Uploaded Piece', category: 'Tops' }
+          });
+        } else {
+          // Crop each individual piece using its box2d bounding box!
+          for (let j = 0; j < detectedList.length; j++) {
+            const item = detectedList[j];
+            setScanStatusText(`Extracting item: ${item.name} (${j + 1}/${detectedList.length})...`);
+            const croppedPreview = await cropImageFromBox(base64Data, item.box2d);
+            newQueue.push({
+              preview: croppedPreview,
+              data: {
+                ...item,
+                imageUrl: croppedPreview
+              }
+            });
+          }
+        }
       } catch (err) {
         console.warn('Vision parsing failed for file:', file.name, err);
       }
@@ -228,6 +289,58 @@ export const AuraConsumerApp: React.FC = () => {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+  };
+
+  const saveAllDetectedItemsToWardrobe = async () => {
+    if (detectedQueue.length === 0) return;
+    setIsScanning(true);
+    setScanStatusText(`Adding ${detectedQueue.length} pieces to your wardrobe...`);
+
+    const newItems: WardrobeItem[] = [];
+    for (let i = 0; i < detectedQueue.length; i++) {
+      const target = detectedQueue[i];
+      const data = target.data;
+      const newItem: WardrobeItem = {
+        id: `item-${Date.now()}-${Math.floor(Math.random() * 10000)}-${i}`,
+        name: data.name || 'Tailored Garment',
+        category: data.category || 'Tops',
+        subcategory: data.subcategory || 'Garment',
+        colorPrimary: data.colorPrimary || '#1E293B',
+        colorSecondary: data.colorSecondary,
+        pattern: data.pattern || 'Solid',
+        material: data.material || 'Natural Fiber',
+        brand: data.brand || null,
+        silhouette: data.silhouette || 'Tailored',
+        fit: data.fit || 'Regular',
+        formalityScore: data.formalityScore || 6,
+        seasonality: data.seasonality || ['Spring', 'Fall', 'Winter'],
+        estimatedValueUSD: data.estimatedValueUSD || 150,
+        condition: data.condition || 'Excellent',
+        timesWorn: 0,
+        isDirty: false,
+        status: 'clean',
+        dateAdded: new Date().toISOString().split('T')[0],
+        aiMetadata: {
+          confidence: (data as any).confidence || 0.88,
+          detectedCategory: data.category
+        },
+        imageUrl: target.preview
+      };
+
+      const saved = await saveWardrobeItem(newItem);
+      newItems.push(saved);
+    }
+
+    setWardrobe(prev => [...newItems, ...prev]);
+    setDetectedQueue([]);
+    setIsScannerOpen(false);
+    setIsScanning(false);
+    setScanStatusText('');
+
+    // Refresh analytics & outfits
+    const analytics = await fetchProfileAnalytics();
+    setProfileAnalytics(analytics);
+    generateOutfitsForContext(context, [...newItems, ...wardrobe]);
   };
 
   const saveDetectedItemToWardrobe = async () => {
@@ -248,6 +361,8 @@ export const AuraConsumerApp: React.FC = () => {
       pattern: correctedData.pattern || 'Solid',
       material: correctedData.material || 'Natural Fiber',
       brand: correctedData.brand || null,
+      silhouette: correctedData.silhouette || 'Tailored',
+      fit: correctedData.fit || 'Regular',
       formalityScore: correctedData.formalityScore || 6,
       seasonality: correctedData.seasonality || ['Spring', 'Fall', 'Winter'],
       estimatedValueUSD: correctedData.estimatedValueUSD || 150,
@@ -1438,29 +1553,63 @@ export const AuraConsumerApp: React.FC = () => {
             )}
 
             {detectedQueue.length > 0 && (
-              <div className="space-y-3">
-                <span className="text-xs font-bold text-emerald-400">
-                  Detected items ({detectedQueue.length}):
-                </span>
-                {detectedQueue.map((item, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between group hover:border-white/15 transition-all">
-                    <div className="flex items-center space-x-3">
-                      <img src={item.preview} alt="Garment" className="w-12 h-12 rounded-lg object-cover" />
-                      <div>
-                        <div className="text-xs font-bold text-white">{item.data.name}</div>
-                        <div className="text-[10px] text-slate-400">
-                          {item.data.category} • {item.data.material}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-400">
+                    Detected Pieces ({detectedQueue.length}):
+                  </span>
+                  <button
+                    onClick={saveAllDetectedItemsToWardrobe}
+                    className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-black text-xs font-bold transition-all shadow flex items-center space-x-1.5"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Save All ({detectedQueue.length})</span>
+                  </button>
+                </div>
+
+                <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                  {detectedQueue.map((item, idx) => (
+                    <div key={idx} className="p-3 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between group hover:border-white/15 transition-all">
+                      <div className="flex items-center space-x-3 min-w-0">
+                        <img src={item.preview} alt="Garment" className="w-12 h-12 rounded-xl object-cover ring-1 ring-white/10 flex-shrink-0" />
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-white truncate">{item.data.name}</div>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-white/10 text-slate-300">
+                              {item.data.category}
+                            </span>
+                            <span className="text-[10px] text-slate-400 truncate">
+                              {item.data.material || item.data.subcategory}
+                            </span>
+                          </div>
                         </div>
                       </div>
+                      <div className="flex items-center space-x-1.5 flex-shrink-0 ml-2">
+                        <button
+                          onClick={() => openCorrectionModal(idx)}
+                          className="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold transition-all"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => setDetectedQueue(prev => prev.filter((_, i) => i !== idx))}
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 transition-all"
+                          title="Remove"
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => openCorrectionModal(idx)}
-                      className="px-3.5 py-1.5 rounded-lg bg-amber-500 text-black text-xs font-bold hover:bg-amber-400 transition-all shadow group-hover:shadow-md"
-                    >
-                      Review
-                    </button>
-                  </div>
-                ))}
+                  ))}
+                </div>
+
+                <button
+                  onClick={saveAllDetectedItemsToWardrobe}
+                  className="w-full py-3 rounded-2xl bg-white hover:bg-slate-100 text-black text-xs font-bold transition-all shadow-lg flex items-center justify-center space-x-2 mt-3"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Save All to Wardrobe ({detectedQueue.length} Pieces)</span>
+                </button>
               </div>
             )}
 

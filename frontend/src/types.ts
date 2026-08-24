@@ -154,7 +154,14 @@ export interface AnalyzedGarmentResult {
   condition: 'New' | 'Excellent' | 'Good' | 'Worn';
   confidence: number;
   styleDescriptors?: string[];
+  imageUrl?: string;
+  box2d?: [number, number, number, number]; // [ymin, xmin, ymax, xmax] 0-1000
   fieldConfidences?: FieldConfidence[];
+}
+
+export interface MultiGarmentAnalysisResult {
+  detectedItems: AnalyzedGarmentResult[];
+  overallWardrobeVibe?: string;
 }
 
 export interface ADRItem {

@@ -668,43 +668,55 @@ export interface AnalyzedGarmentResult {
   fieldConfidences?: FieldConfidence[]; // Per-field confidence scores
 }
 
-export async function analyzeGarmentImage(imageBase64: string, mimeType = 'image/jpeg'): Promise<AnalyzedGarmentResult> {
+export async function analyzeMultiGarmentImage(imageBase64: string, mimeType = 'image/jpeg'): Promise<MultiGarmentAnalysisResult> {
   const ai = getAiClient();
   const cleanBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
 
   if (ai) {
     try {
-      const prompt = `You are AURA Garment Vision Intelligence. Analyze this piece of clothing.
-Extract structured metadata accurately. 
-CRITICAL RULE ON BRAND: Only identify brand if a logo, label, or unmistakable trademark pattern is clearly visible. If not 100% visible, set "brand": null. Do NOT hallucinate brands.
-Assess confidence between 0.0 and 1.0 for each field. Mark fields with confidence < 0.7 as uncertain.
+      const prompt = `You are AURA Garment Vision Intelligence, an Apple-grade fashion styling AI.
+Analyze this photo carefully. The photo may contain:
+- A person wearing an entire outfit (e.g. jacket/blazer, shirt/t-shirt/knit, trousers/jeans/skirt, shoes/boots/sneakers, and accessories like watch, bag, belt, hat, sunglasses, jewelry)
+- A single isolated garment (flat lay, hanger, or e-commerce photo)
+- Multiple garments laid out together
 
-Return ONLY valid JSON matching this schema:
+TASK:
+Identify and separate EVERY distinct garment, footwear item, and accessory visible.
+Do NOT combine a top and bottom into one item unless it is genuinely a One-Piece (like a dress or jumpsuit).
+If someone is wearing a jacket over a shirt with pants and shoes, return at least 4 separate items (Outerwear, Top, Bottom, Shoes), plus any visible accessories (Accessories).
+
+CRITICAL ON BRAND: Only identify brand if a logo, label, or unmistakable trademark pattern is 100% visible. Otherwise set "brand": null.
+CRITICAL ON BOX2D: For every detected piece, provide accurate normalized bounding box coordinates "box2d": [ymin, xmin, ymax, xmax] with integer values from 0 to 1000 that tightly encompass only that specific piece of clothing/accessory in the image.
+
+Return ONLY a valid JSON object matching this schema:
 {
-  "name": "Descriptive, elegant garment name (e.g. Relaxed Merino Wool Knit)",
-  "category": "Tops" | "Bottoms" | "Outerwear" | "Shoes" | "Accessories" | "One-Piece",
-  "subcategory": "e.g. Sweater, T-Shirt, Jeans, Trousers, Blazer, Sneakers, Boots",
-  "colorPrimary": "Primary Hex or Clean Color Name (e.g. #1E293B or Charcoal Grey)",
-  "colorSecondary": "Secondary color or null",
-  "pattern": "Solid | Striped | Checkered | Graphic | Ribbed | Textured",
-  "material": "e.g. 100% Virgin Wool, 14oz Raw Denim, Calfskin Leather, Organic Cotton",
-  "brand": "string or null",
-  "silhouette": "e.g. Relaxed, Tailored, Oversized, Slim, Boxy",
-  "fit": "e.g. Regular Fit, Drop Shoulder, Straight Leg",
-  "formalityScore": number from 1 to 10 (1=loungewear, 5=smart casual, 10=black tie),
-  "seasonality": ["Spring", "Summer", "Fall", "Winter"],
-  "estimatedValueUSD": number (realistic retail estimate),
-  "condition": "New" | "Excellent" | "Good" | "Worn",
-  "confidence": number between 0.50 and 0.99 (overall confidence),
-  "styleDescriptors": ["e.g. Minimalist", "Architectural", "Monochrome"],
-  "fieldConfidences": [
-    {"field": "colorPrimary", "confidence": 0.95},
-    {"field": "brand", "confidence": 0.60},
-    {"field": "material", "confidence": 0.85},
-    {"field": "formalityScore", "confidence": 0.88},
-    {"field": "fit", "confidence": 0.65},
-    {"field": "silhouette", "confidence": 0.80}
-  ]
+  "detectedItems": [
+    {
+      "name": "Descriptive, elegant name (e.g. Tailored Charcoal Wool Trousers)",
+      "category": "Tops" | "Bottoms" | "Outerwear" | "Shoes" | "Accessories" | "One-Piece",
+      "subcategory": "e.g. Blazer, T-Shirt, Oxford Shirt, Denim Jeans, Pleated Trousers, Derby Shoes, Chelsea Boots, Leather Belt, Minimalist Watch, Canvas Tote",
+      "colorPrimary": "Primary Hex or Clean Color Name (e.g. #1E293B or Charcoal Grey)",
+      "colorSecondary": "Secondary color or null",
+      "pattern": "Solid" | "Striped" | "Checkered" | "Graphic" | "Ribbed" | "Textured",
+      "material": "e.g. 100% Virgin Wool, 14oz Raw Denim, Calfskin Leather, Organic Cotton",
+      "brand": "string or null",
+      "silhouette": "e.g. Relaxed, Tailored, Oversized, Slim, Boxy",
+      "fit": "e.g. Regular Fit, Drop Shoulder, Straight Leg, Wide Leg, Slim Fit",
+      "formalityScore": number from 1 to 10 (1=casual loungewear, 5=smart casual, 8=business formal, 10=black tie),
+      "seasonality": ["Spring", "Summer", "Fall", "Winter"],
+      "estimatedValueUSD": number (realistic retail estimate),
+      "condition": "New" | "Excellent" | "Good" | "Worn",
+      "confidence": number between 0.60 and 0.99,
+      "styleDescriptors": ["e.g. Quiet Luxury", "Architectural", "Monochrome"],
+      "box2d": [100, 200, 500, 800],
+      "fieldConfidences": [
+        {"field": "colorPrimary", "confidence": 0.95},
+        {"field": "material", "confidence": 0.85},
+        {"field": "formalityScore", "confidence": 0.88}
+      ]
+    }
+  ],
+  "overallWardrobeVibe": "e.g. Modern Minimalist & Quiet Luxury"
 }`;
 
       const response = await ai.models.generateContent({
@@ -729,40 +741,48 @@ Return ONLY valid JSON matching this schema:
       });
 
       const parsed = JSON.parse(response.text || '{}');
-      if (parsed.name && parsed.category) {
-        // Add low-confidence flags to fieldConfidences
-        const fieldConfs = (parsed.fieldConfidences || []).map((fc: any) => ({
-          ...fc,
-          isLowConfidence: fc.confidence < 0.7
-        }));
-        
+      if (Array.isArray(parsed.detectedItems) && parsed.detectedItems.length > 0) {
+        const validatedItems: AnalyzedGarmentResult[] = parsed.detectedItems.map((item: any) => {
+          const fieldConfs = (item.fieldConfidences || []).map((fc: any) => ({
+            ...fc,
+            isLowConfidence: fc.confidence < 0.7
+          }));
+
+          return {
+            name: item.name || 'Garment Piece',
+            category: item.category || 'Tops',
+            subcategory: item.subcategory || 'Piece',
+            colorPrimary: item.colorPrimary || '#1E293B',
+            colorSecondary: item.colorSecondary || undefined,
+            pattern: item.pattern || 'Solid',
+            material: item.material || 'Natural Fabric',
+            brand: item.brand || null,
+            silhouette: item.silhouette || 'Tailored',
+            fit: item.fit || 'Regular',
+            formalityScore: Math.min(Math.max(item.formalityScore || 6, 1), 10),
+            seasonality: Array.isArray(item.seasonality) ? item.seasonality : ['Fall', 'Winter', 'Spring'],
+            estimatedValueUSD: item.estimatedValueUSD || 150,
+            condition: item.condition || 'Excellent',
+            confidence: item.confidence || 0.88,
+            styleDescriptors: item.styleDescriptors || ['Modern Minimalist'],
+            box2d: Array.isArray(item.box2d) && item.box2d.length === 4 ? item.box2d : undefined,
+            fieldConfidences: fieldConfs,
+            imageUrl: imageBase64
+          };
+        });
+
         return {
-          name: parsed.name,
-          category: parsed.category,
-          subcategory: parsed.subcategory || 'Garment',
-          colorPrimary: parsed.colorPrimary || '#1E293B',
-          colorSecondary: parsed.colorSecondary || undefined,
-          pattern: parsed.pattern || 'Solid',
-          material: parsed.material || 'Natural Fiber',
-          brand: parsed.brand || null,
-          silhouette: parsed.silhouette || 'Tailored',
-          fit: parsed.fit || 'Regular',
-          formalityScore: Math.min(Math.max(parsed.formalityScore || 6, 1), 10),
-          seasonality: Array.isArray(parsed.seasonality) ? parsed.seasonality : ['Fall', 'Winter', 'Spring'],
-          estimatedValueUSD: parsed.estimatedValueUSD || 180,
-          condition: parsed.condition || 'Excellent',
-          confidence: parsed.confidence || 0.88,
-          styleDescriptors: parsed.styleDescriptors || ['Modern Minimalist'],
-          fieldConfidences: fieldConfs,
-          imageUrl: imageBase64
+          detectedItems: validatedItems,
+          overallWardrobeVibe: parsed.overallWardrobeVibe || 'Curated Contemporary'
         };
       }
     } catch (err) {
-      console.warn('[AURA Vision] Gemini Vision call failed, using graceful deterministic fallback:', err);
+      console.warn('[AURA Vision] Gemini Multi-Item Vision call failed, using fallback:', err);
     }
   }
 
-  return {
+  // Graceful fallback single garment
+  const fallbackSingle: AnalyzedGarmentResult = {
     name: 'Fine Knit Merino Crewneck',
     category: 'Tops',
     subcategory: 'Knitwear',
@@ -778,6 +798,7 @@ Return ONLY valid JSON matching this schema:
     condition: 'Excellent',
     confidence: 0.82,
     styleDescriptors: ['Minimalist', 'Timeless'],
+    box2d: [50, 100, 950, 900],
     fieldConfidences: [
       { field: 'colorPrimary', confidence: 0.85, isLowConfidence: false },
       { field: 'material', confidence: 0.75, isLowConfidence: false },
@@ -786,6 +807,16 @@ Return ONLY valid JSON matching this schema:
     ],
     imageUrl: imageBase64
   };
+
+  return {
+    detectedItems: [fallbackSingle],
+    overallWardrobeVibe: 'Modern Minimalist'
+  };
+}
+
+export async function analyzeGarmentImage(imageBase64: string, mimeType = 'image/jpeg'): Promise<AnalyzedGarmentResult> {
+  const result = await analyzeMultiGarmentImage(imageBase64, mimeType);
+  return result.detectedItems[0];
 }
 
 /**
@@ -1032,8 +1063,10 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
 
   const tops = cleanWardrobe.filter(i => i.category === 'Tops');
   const bottoms = cleanWardrobe.filter(i => i.category === 'Bottoms');
+  const onePieces = cleanWardrobe.filter(i => i.category === 'One-Piece');
   const outerwear = cleanWardrobe.filter(i => i.category === 'Outerwear');
   const shoes = cleanWardrobe.filter(i => i.category === 'Shoes');
+  const accessories = cleanWardrobe.filter(i => i.category === 'Accessories');
 
   interface OutfitCandidate {
     items: WardrobeItem[];
@@ -1049,8 +1082,29 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
   const isColdOrCool = tempNum <= 20 || context.weather === 'Rain' || context.weather === 'Windy';
   const targetFormality = context.formalityPreference || (context.occasion === 'Work Pitch' ? 8 : context.occasion === 'Evening Dinner' ? 7 : 4);
 
-  for (const top of (tops.length > 0 ? tops : cleanWardrobe.slice(0, 2))) {
-    for (const bottom of (bottoms.length > 0 ? bottoms : cleanWardrobe.slice(0, 2))) {
+  // Helper to pick best accessory for a base look
+  const pickBestAccessories = (baseItems: WardrobeItem[]): WardrobeItem[] => {
+    if (accessories.length === 0) return [];
+    const available = accessories.filter(a => !baseItems.some(b => b.id === a.id) && !recentlyWornIds.has(a.id));
+    const pool = available.length > 0 ? available : accessories;
+    
+    // Sort accessories by color harmony and formality closeness with base items
+    const avgBaseFormality = baseItems.reduce((acc, i) => acc + i.formalityScore, 0) / baseItems.length;
+    const scoredAccs = pool.map(acc => {
+      const formalityDiff = Math.abs(acc.formalityScore - avgBaseFormality);
+      return { acc, score: 10 - formalityDiff };
+    }).sort((a, b) => b.score - a.score);
+
+    // Pick at most 2 distinct accessories
+    return scoredAccs.slice(0, 2).map(s => s.acc);
+  };
+
+  // 1. Generate Tops + Bottoms combinations
+  const availableTops = tops.length > 0 ? tops : cleanWardrobe.slice(0, 2);
+  const availableBottoms = bottoms.length > 0 ? bottoms : cleanWardrobe.slice(0, 2);
+
+  for (const top of availableTops) {
+    for (const bottom of availableBottoms) {
       if (top.id === bottom.id) continue;
 
       for (const shoe of (shoes.length > 0 ? shoes : [undefined])) {
@@ -1059,12 +1113,21 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
         const currentItems: WardrobeItem[] = [top, bottom];
         if (shoe) currentItems.push(shoe);
 
-        if (isColdOrCool && outerwear.length > 0) {
-          const compatibleOuter = outerwear.find(o => !recentlyWornIds.has(o.id)) || outerwear[0];
+        // Add outerwear if cold or as layered statement
+        if ((isColdOrCool || top.formalityScore >= 7) && outerwear.length > 0) {
+          const compatibleOuter = outerwear.find(o => !recentlyWornIds.has(o.id) && !currentItems.some(i => i.id === o.id)) || outerwear[0];
           if (compatibleOuter && !currentItems.some(i => i.id === compatibleOuter.id)) {
             currentItems.push(compatibleOuter);
           }
         }
+
+        // Add complementary accessories (watches, belts, bags, etc.)
+        const accs = pickBestAccessories(currentItems);
+        accs.forEach(a => {
+          if (!currentItems.some(i => i.id === a.id)) {
+            currentItems.push(a);
+          }
+        });
 
         // Calculate compatibility score using all scoring components
         const { score: compatScore, breakdown } = calculateCompatibilityScore(currentItems, context);
@@ -1092,8 +1155,55 @@ export async function generateOutfitsFromWardrobe(context: ContextInput): Promis
     }
   }
 
+  // 2. Generate One-Piece combinations (Dresses, Jumpsuits)
+  for (const onePiece of onePieces) {
+    for (const shoe of (shoes.length > 0 ? shoes : [undefined])) {
+      if (shoe && shoe.id === onePiece.id) continue;
+
+      const currentItems: WardrobeItem[] = [onePiece];
+      if (shoe) currentItems.push(shoe);
+
+      if ((isColdOrCool || onePiece.formalityScore >= 7) && outerwear.length > 0) {
+        const compatibleOuter = outerwear.find(o => !recentlyWornIds.has(o.id) && !currentItems.some(i => i.id === o.id)) || outerwear[0];
+        if (compatibleOuter && !currentItems.some(i => i.id === compatibleOuter.id)) {
+          currentItems.push(compatibleOuter);
+        }
+      }
+
+      const accs = pickBestAccessories(currentItems);
+      accs.forEach(a => {
+        if (!currentItems.some(i => i.id === a.id)) {
+          currentItems.push(a);
+        }
+      });
+
+      const { score: compatScore, breakdown } = calculateCompatibilityScore(currentItems, context);
+      candidateCombinations.push({
+        items: currentItems,
+        score: compatScore,
+        notes: [`One-piece ensemble tailored for ${context.occasion}`],
+        compatibilityScore: compatScore,
+        scoringBreakdown: breakdown
+      });
+    }
+  }
+
   candidateCombinations.sort((a, b) => b.compatibilityScore - a.compatibilityScore);
-  const topCandidates = candidateCombinations.slice(0, 4);
+
+  // Pick top candidates while maximizing diversity across tops & bottoms
+  const selectedCandidates: OutfitCandidate[] = [];
+  const seenCombos = new Set<string>();
+
+  for (const cand of candidateCombinations) {
+    const key = cand.items.map(i => i.id).sort().join('-');
+    if (!seenCombos.has(key)) {
+      seenCombos.add(key);
+      selectedCandidates.push(cand);
+      if (selectedCandidates.length >= 4) break;
+    }
+  }
+
+  const topCandidates = selectedCandidates.length > 0 ? selectedCandidates : candidateCombinations.slice(0, 4);
 
   if (topCandidates.length === 0) {
     topCandidates.push({

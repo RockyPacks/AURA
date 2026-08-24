@@ -144,18 +144,35 @@ export interface SeasonalUsageData {
   underutilizedItems: string[];  // item IDs
 }
 
-export interface ProfileAnalytics {
-  totalPieces: number;
-  totalEstimatedValueUSD: number;
-  activeUtilizationRate: number;
-  cleanCount: number;
-  inWashCount: number;
-  mostWornCategory: string;
-  mostWornColors: { color: string; count: number }[];
-  categoryBreakdown: { category: string; count: number; value: number }[];
-  leastWornItems: WardrobeItem[];
-  mostWornItems: WardrobeItem[];
-  totalWearEvents: number;
-  isLearningPhase: boolean;
-  primaryArchetype: string;
+export interface FieldConfidence {
+  field: string;
+  confidence: number;
+  isLowConfidence: boolean;
+}
+
+export interface AnalyzedGarmentResult {
+  name: string;
+  category: GarmentCategory;
+  subcategory: string;
+  colorPrimary: string;
+  colorSecondary?: string;
+  pattern: string;
+  material: string;
+  brand: string | null;
+  silhouette?: string;
+  fit?: string;
+  formalityScore: number;
+  seasonality: string[];
+  estimatedValueUSD: number;
+  condition: 'New' | 'Excellent' | 'Good' | 'Worn';
+  confidence: number;
+  styleDescriptors?: string[];
+  imageUrl?: string;
+  box2d?: [number, number, number, number]; // [ymin, xmin, ymax, xmax] 0-1000
+  fieldConfidences?: FieldConfidence[];
+}
+
+export interface MultiGarmentAnalysisResult {
+  detectedItems: AnalyzedGarmentResult[];
+  overallWardrobeVibe?: string;
 }

@@ -19,6 +19,7 @@ import {
 } from './store.js';
 import { 
   analyzeGarmentImage, 
+  analyzeMultiGarmentImage,
   generateOutfitsFromWardrobe, 
   swapOutfitItem, 
   analyzeShoppingItem 
@@ -116,12 +117,12 @@ app.post('/api/analyze-wardrobe-image', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Missing imageBase64 data' });
     }
 
-    const analyzed = await analyzeGarmentImage(imageBase64, mimeType);
+    const result = await analyzeMultiGarmentImage(imageBase64, mimeType);
     res.json({ 
       success: true, 
       data: {
-        detectedItems: [analyzed],
-        overallWardrobeVibe: analyzed.styleDescriptors?.[0] || 'Modern Minimalist'
+        detectedItems: result.detectedItems,
+        overallWardrobeVibe: result.overallWardrobeVibe || 'Modern Minimalist'
       }
     });
   } catch (err: any) {
