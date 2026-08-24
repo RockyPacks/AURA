@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppMode } from '../types';
-import { Sparkles, Building2, Shirt, CheckCircle2, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Sparkles, Building2, CheckCircle2, ShieldCheck, ChevronRight } from 'lucide-react';
+import auraLogo from '../assets/aura_logo.jpg';
 
 interface NavbarProps {
   currentMode: AppMode;
@@ -21,8 +22,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         
         {/* Brand & Identity - Compact on mobile */}
         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
-          <div id="brand-logo-container" className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-white via-slate-200 to-slate-400 text-black flex items-center justify-center shadow-lg shadow-white/10 ring-1 ring-white/20 font-black text-sm tracking-tighter flex-shrink-0">
-            A
+          <div id="brand-logo-container" className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl overflow-hidden shadow-lg shadow-white/10 ring-1 ring-white/20 flex-shrink-0">
+            <img src={auraLogo} alt="AURA Logo" className="w-full h-full object-cover" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center space-x-1.5 sm:space-x-2">
