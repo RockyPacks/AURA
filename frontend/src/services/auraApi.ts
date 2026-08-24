@@ -7,7 +7,6 @@ import {
   ShoppingAnalysis, 
   ProfileAnalytics 
 } from '../types';
-import { INITIAL_WARDROBE_ITEMS } from '../data/sampleWardrobe';
 
 const LOCAL_STORAGE_KEY_WARDROBE = 'aura_wardrobe_v1';
 const LOCAL_STORAGE_KEY_WEAR = 'aura_wear_events_v1';
@@ -37,7 +36,7 @@ export async function fetchWardrobe(): Promise<WardrobeItem[]> {
       // ignore
     }
   }
-  return INITIAL_WARDROBE_ITEMS;
+  return [];
 }
 
 export async function saveWardrobeItem(item: WardrobeItem): Promise<WardrobeItem> {
