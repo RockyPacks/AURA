@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: aura-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    disk:
+      name: aura-data
+      mountPath: /opt/render/project/src/backend/data
+      sizeGB: 1

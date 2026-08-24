@@ -1,3 +1,4 @@
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 import { 
   WardrobeItem, 
   ContextInput, 
@@ -15,7 +16,7 @@ const LOCAL_STORAGE_KEY_WEAR = 'aura_wear_events_v1';
 
 export async function fetchWardrobe(): Promise<WardrobeItem[]> {
   try {
-    const res = await fetch('/api/wardrobe');
+    const res = await fetch(`${API_BASE_URL}/api/wardrobe');
     if (res.ok) {
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
@@ -41,7 +42,7 @@ export async function fetchWardrobe(): Promise<WardrobeItem[]> {
 
 export async function saveWardrobeItem(item: WardrobeItem): Promise<WardrobeItem> {
   try {
-    const res = await fetch('/api/wardrobe', {
+    const res = await fetch(`${API_BASE_URL}/api/wardrobe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(item)
@@ -65,7 +66,7 @@ export async function saveWardrobeItem(item: WardrobeItem): Promise<WardrobeItem
 
 export async function updateWardrobeItemApi(id: string, updates: Partial<WardrobeItem>): Promise<WardrobeItem> {
   try {
-    const res = await fetch(`/api/wardrobe/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/api/wardrobe/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates)
@@ -93,7 +94,7 @@ export async function updateWardrobeItemApi(id: string, updates: Partial<Wardrob
 
 export async function deleteWardrobeItemApi(id: string): Promise<boolean> {
   try {
-    const res = await fetch(`/api/wardrobe/${id}`, { method: 'DELETE' });
+    const res = await fetch(`${API_BASE_URL}/api/wardrobe/${id}`, { method: 'DELETE' });
     if (res.ok) {
       return true;
     }
@@ -110,7 +111,7 @@ export async function deleteWardrobeItemApi(id: string): Promise<boolean> {
 // ----------------- Garment Vision Ingestion -----------------
 
 export async function analyzeGarmentImageApi(imageBase64: string, mimeType = 'image/jpeg'): Promise<any> {
-  const res = await fetch('/api/analyze-wardrobe-image', {
+  const res = await fetch(`${API_BASE_URL}/api/analyze-wardrobe-image', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ imageBase64, mimeType })
@@ -126,7 +127,7 @@ export async function analyzeGarmentImageApi(imageBase64: string, mimeType = 'im
 
 export async function generateOutfitsApi(context: ContextInput): Promise<GeneratedOutfit[]> {
   try {
-    const res = await fetch('/api/generate-outfits', {
+    const res = await fetch(`${API_BASE_URL}/api/generate-outfits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ context })
@@ -152,7 +153,7 @@ export async function swapOutfitItemApi(
   targetItemId: string, 
   replacementItemId: string
 ): Promise<{ updatedItemIds: string[]; recalculatedScore: number; compatibilityNote: string }> {
-  const res = await fetch('/api/swap-item', {
+  const res = await fetch(`${API_BASE_URL}/api/swap-item', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ currentItemIds, targetItemId, replacementItemId })
@@ -175,7 +176,7 @@ export async function logWearEventApi(
   feedback?: 'loved' | 'neutral' | 'disliked'
 ): Promise<{ event: WearEvent; wardrobe: WardrobeItem[] }> {
   try {
-    const res = await fetch('/api/wear-event', {
+    const res = await fetch(`${API_BASE_URL}/api/wear-event', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ outfitId, outfitTitle, itemIds, context, feedback })
@@ -225,7 +226,7 @@ export async function analyzeShoppingItemApi(
   category: string,
   imageBase64?: string
 ): Promise<ShoppingAnalysis> {
-  const res = await fetch('/api/analyze-shopping-item', {
+  const res = await fetch(`${API_BASE_URL}/api/analyze-shopping-item', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, priceUSD, category, imageBase64 })
@@ -242,7 +243,7 @@ export async function analyzeShoppingItemApi(
 
 export async function fetchProfileAnalytics(): Promise<ProfileAnalytics> {
   try {
-    const res = await fetch('/api/profile-analytics');
+    const res = await fetch(`${API_BASE_URL}/api/profile-analytics');
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) {
