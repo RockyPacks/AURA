@@ -42,6 +42,14 @@ export interface ContextInput {
   timeOfDay?: 'Morning' | 'Afternoon' | 'Evening';
 }
 
+export interface ScoringBreakdown {
+  colorHarmony: number;
+  styleCompatibility: number;
+  occasionAlignment: number;
+  weatherSuitability: number;
+  seasonalityMatch: number;
+}
+
 export interface GeneratedOutfit {
   id: string;
   title: string;
@@ -54,9 +62,12 @@ export interface GeneratedOutfit {
   confidenceScore: number;
   confidenceBoostScore?: number;
   compatibilityScore?: number;
+  scoringBreakdown?: ScoringBreakdown;
   whyReasons: string[];
   heroImageUrl?: string;
   createdAt?: string;
+  explanationGeneratedBy?: 'gemini-2.5-flash' | 'fallback';
+  explanationGeneratedAt?: string;
 }
 
 export interface WearEvent {
@@ -64,10 +75,15 @@ export interface WearEvent {
   outfitId: string;
   outfitTitle: string;
   itemIds: string[];
-  timestamp: string;
-  context: ContextInput;
-  feedback?: 'loved' | 'neutral' | 'disliked';
+  wornDate: string;           // ISO date (YYYY-MM-DD)
+  wornAt: string;             // ISO timestamp
+  occasion?: string;          // e.g., "Work", "Casual", "Gym"
+  weather?: string;           // e.g., "Sunny", "Rainy"
+  temperature?: string;       // e.g., "18°C"
+  feedback?: 'loved' | 'okay' | 'hated' | 'neutral' | 'disliked';
   notes?: string;
+  timestamp?: string;         // Legacy - maps to wornAt
+  context?: ContextInput;     // Legacy support
 }
 
 export interface StylePreference {
@@ -95,6 +111,37 @@ export interface ShoppingAnalysis {
   compatibleItemIds?: string[];
   reasoning: string[];
   createdAt: string;
+}
+
+export interface WearStats {
+  totalWearEvents: number;
+  itemsWorn: number;
+  mostWornItem: { id: string; name: string; timesWorn: number } | null;
+  leastWornItem: { id: string; name: string; timesWorn: number } | null;
+  averageWearPerItem: number;
+  unusedItems: WardrobeItem[];
+  underusedItems: WardrobeItem[];  // worn < 2x
+  overusedItems: WardrobeItem[];   // worn > avg by 2x
+}
+
+export interface DaysSinceWornResult {
+  daysSince: number;
+  readableFormat: string;
+}
+
+export interface WearStreak {
+  currentStreak: number;
+  longestStreak: number;
+  currentStreakDates?: string[];
+  longestStreakDates?: string[];
+}
+
+export interface SeasonalUsageData {
+  season: string;
+  itemsUsed: number;
+  totalWearEvents: number;
+  averageWearPerItem: number;
+  underutilizedItems: string[];  // item IDs
 }
 
 export interface ProfileAnalytics {

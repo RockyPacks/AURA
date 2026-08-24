@@ -1,0 +1,715 @@
+# Implementation Plan: AURA Product Roadmap
+
+## Overview
+
+This implementation plan follows the 8-phase roadmap for AURA (AI-powered personal stylist). The plan is organized by sprint, with each sprint building on previous foundations. All tasks use TypeScript with React for the frontend and Node.js/Express for the backend.
+
+**MVP Focus (Sprints 1-3):** The core MVP requires Sprints 1-3 to establish:
+- Wardrobe management with persistence
+- Basic AI clothing recognition
+- Outfit generation with compatibility scoring
+- Shopping intelligence (duplicate detection, buy recommendations)
+- Analytics dashboard
+
+---
+
+## Phase 1: Foundation & Wardrobe Management (Sprint 1)
+
+### Sprint 1.1: Project Structure and Backend Setup
+
+- [ ] 1.1.1 Set up backend project structure
+  - Create Express server with TypeScript configuration
+  - Set up folder structure: `src/api`, `src/services`, `src/persistence`, `src/middleware`
+  - Configure `.env` file for API keys
+  - _Requirements: 33, 34, 35_
+
+- [ ] 1.1.2 Implement data persistence layer
+  - Create `src/persistence/database.ts` with JSON file I/O
+  - Implement atomic write operations (temp file + rename)
+  - Add in-memory caching with LRU strategy
+  - _Requirements: 3, 5_
+
+- [ ] 1.1.3 Create initial API routes and middleware
+  - Set up Express server with middleware stack
+  - Implement request validation middleware
+  - Add error handling and logging
+  - _Requirements: 33, 35_
+
+- [ ] 1.1.4 Write unit tests for persistence layer
+  - Test file read/write operations
+  - Test cache behavior
+  - _Requirements: 3_
+
+- [ ]* 1.1.5 Write integration tests for API routes
+  - Test endpoint responses
+  - Test error handling
+  - _Requirements: 33, 34, 35_
+
+### Sprint 1.2: Wardrobe CRUD Operations
+
+- [ ] 1.2.1 Implement WardrobeItem type definitions
+  - Create TypeScript interfaces for `WardrobeItem`
+  - Define category, condition, and type enums
+  - _Requirements: 5_
+
+- [ ] 1.2.2 Implement wardrobe CRUD endpoints
+  - `GET /api/wardrobe` - List all items
+  - `GET /api/wardrobe/:id` - Get single item
+  - `POST /api/wardrobe` - Create new item
+  - `PATCH /api/wardrobe/:id` - Update item
+  - `DELETE /api/wardrobe/:id` - Delete item
+  - _Requirements: 3, 7, 8_
+
+- [ ] 1.2.3 Implement item persistence logic
+  - Add item with auto-generated ID and timestamps
+  - Update item preserving ID and updating timestamps
+  - Delete item with cascade checks for outfit references
+  - _Requirements: 3, 7, 8_
+
+- [ ] 1.2.4 Create API service layer
+  - Implement business logic for CRUD operations
+  - Add validation rules for item fields
+  - _Requirements: 5, 7_
+
+- [ ] 1.2.5 Write unit tests for CRUD operations
+  - Test create, read, update, delete scenarios
+  - Test validation edge cases
+  - _Requirements: 3, 5, 7, 8_
+
+- [ ]* 1.2.6 Write integration tests for wardrobe endpoints
+  - Test full CRUD workflow
+  - Test error scenarios
+  - _Requirements: 3, 5, 7, 8_
+
+### Sprint 1.3: Visual Wardrobe Display
+
+- [ ] 1.3.1 Create wardrobe React components
+  - `WardrobeGrid` - Main grid container component
+  - `WardrobeCard` - Individual item card with image
+  - `EmptyState` - Empty wardrobe placeholder
+  - _Requirements: 6_
+
+- [ ] 1.3.2 Implement responsive grid layout
+  - Mobile: 2-column grid (320px-767px)
+  - Tablet: 3-column grid (768px-1023px)
+  - Desktop: 4-column grid (1024px+)
+  - _Requirements: 31_
+
+- [ ] 1.3.3 Add image placeholders and loading states
+  - Create skeleton loading components
+  - Implement lazy loading for images
+  - _Requirements: 6_
+
+- [ ] 1.3.4 Connect frontend to backend API
+  - Implement API service for wardrobe operations
+  - Add error handling and retry logic
+  - _Requirements: 36_
+
+- [ ] 1.3.5 Write unit tests for wardrobe components
+  - Test rendering with sample data
+  - Test empty state
+  - _Requirements: 6_
+
+- [ ]* 1.3.6 Write visual regression tests
+  - Test responsive layouts on different screen sizes
+  - _Requirements: 31_
+
+---
+
+## Phase 2: AI Clothing Recognition (Sprint 2)
+
+### Sprint 2.1: AI Integration Setup
+
+- [ ] 2.1.1 Install and configure Google GenAI SDK
+  - Install `@google/genai` package
+  - Create AI service configuration
+  - Add environment variable for API key
+  - _Requirements: 9_
+
+- [ ] 2.1.2 Create AI service client
+  - Implement `src/services/aiClient.ts`
+  - Configure Gemini model (gemini-2.5-flash)
+  - Add request/response logging for debugging
+  - _Requirements: 9, 10_
+
+- [ ] 2.1.3 Implement retry logic and error handling
+  - Add exponential backoff for API failures
+  - Implement fallback to default values
+  - _Requirements: 37_
+
+### Sprint 2.2: Image Analysis Integration
+
+- [ ] 2.2.1 Implement garment image analysis endpoint
+  - `POST /api/analyze-wardrobe-image` endpoint
+  - Accept Base64-encoded image data
+  - Send to Gemini Vision API
+  - _Requirements: 9_
+
+- [ ] 2.2.2 Parse and validate AI response
+  - Create TypeScript interface for `AnalyzedGarmentResult`
+  - Extract detected fields: category, color, pattern, material, formality
+  - Validate confidence scores
+  - _Requirements: 9, 10_
+
+- [ ] 2.2.3 Implement confidence threshold logic
+  - Flag low-confidence fields (< 0.70)
+  - Highlight fields for user review
+  - Provide manual override options
+  - _Requirements: 9, 10_
+
+- [ ] 2.2.4 Create image upload UI component
+  - File input with drag-and-drop
+  - Image preview before upload
+  - Progress indicator
+  - _Requirements: 4, 31_
+
+- [ ] 2.2.5 Write unit tests for AI integration
+  - Test API call with mocked responses
+  - Test response parsing
+  - Test fallback behavior
+  - _Requirements: 9_
+
+- [ ]* 2.2.6 Write integration tests for image analysis
+  - Test complete upload and analysis flow
+  - Test error scenarios (no image, low quality)
+  - _Requirements: 9, 10_
+
+### Sprint 2.3: User Correction System
+
+- [ ] 2.3.1 Create item editing modal
+  - Display AI suggestions alongside editable fields
+  - Highlight changed fields with visual indicators
+  - _Requirements: 10_
+
+- [ ] 2.3.2 Implement user edit persistence
+  - Merge user edits with AI suggestions
+  - Preserve user input over AI suggestions
+  - Update item in database
+  - _Requirements: 10_
+
+- [ ] 2.3.3 Add correction logging
+  - Log user corrections for model improvement
+  - Store correction metadata (timestamp, user ID)
+  - _Requirements: 10_
+
+- [ ] 2.3.4 Write unit tests for editing logic
+  - Test correction merging
+  - Test validation after correction
+  - _Requirements: 10_
+
+---
+
+## Phase 3: AI Outfit Engine (Sprint 3)
+
+### Sprint 3.1: Outfit Generation Core
+
+- [ ] 3.1.1 Implement outfit generation algorithm
+  - Create `src/services/outfitEngine.ts`
+  - Filter wardrobe items by clean status and availability
+  - Generate candidate combinations
+  - _Requirements: 12_
+
+- [ ] 3.1.2 Create compatibility scoring system
+  - Implement formality alignment scoring
+  - Implement weather suitability scoring
+  - Implement color harmony indicators
+  - _Requirements: 13, 14_
+
+- [ ] 3.1.3 Implement recent wear tracking
+  - Track last worn date per item
+  - Calculate days since last worn
+  - Apply penalty for recently-worn items
+  - _Requirements: 18_
+
+- [ ] 3.1.4 Create AI-enhanced outfit synthesis
+  - Send promising candidates to Gemini for explanations
+  - Generate editorial-style descriptions
+  - _Requirements: 15_
+
+- [ ] 3.1.5 Write unit tests for scoring algorithms
+  - Test formality scoring with various inputs
+  - Test weather scoring with different conditions
+  - _Requirements: 13, 14_
+
+- [ ]* 3.1.6 Write property test for outfit diversity
+  - **Property 1: Outfit Diversity**
+  - **Validates: Requirements 12.2**
+  - Test that multiple distinct outfits are generated
+
+### Sprint 3.2: Context-Aware Outfit Generation
+
+- [ ] 3.2.1 Implement context parsing
+  - Parse context from user request
+  - Extract temperature, occasion, mood, time of day
+  - Validate context fields
+  - _Requirements: 12_
+
+- [ ] 3.2.2 Implement weather data integration
+  - Create `src/services/weatherService.ts`
+  - Fetch weather from OpenWeatherMap API
+  - Cache weather data (15-minute TTL)
+  - _Requirements: 14, 22_
+
+- [ ] 3.2.3 Create weather-aware outfit filtering
+  - Filter items by seasonality
+  - Adjust recommendations based on temperature
+  - Recommend appropriate layers for cold weather
+  - _Requirements: 14_
+
+- [ ] 3.2.4 Implement occasion-based filtering
+  - Filter items by formality level
+  - Ensure work-appropriate items for work occasions
+  - _Requirements: 13, 14_
+
+- [ ] 3.2.5 Write unit tests for context-aware generation
+  - Test different weather scenarios
+  - Test occasion matching
+  - _Requirements: 14, 22_
+
+### Sprint 3.3: Outfit Management
+
+- [ ] 3.3.1 Implement saved outfits data model
+  - Create TypeScript interfaces for `SavedOutfit`
+  - Include item IDs, title, metadata, ratings
+  - _Requirements: 16_
+
+- [ ] 3.3.2 Implement outfit saving and retrieval
+  - `POST /api/save-outfit` endpoint
+  - `GET /api/saved-outfits` endpoint
+  - `DELETE /api/saved-outfits/:id` endpoint
+  - _Requirements: 16_
+
+- [ ] 3.3.3 Implement outfit rating system
+  - `POST /api/rate-outfit` endpoint
+  - Track ratings per outfit
+  - Update average ratings
+  - _Requirements: 17_
+
+- [ ] 3.3.4 Create outfit history tracking
+  - Record wear events with timestamps
+  - Track occasions and feedback
+  - Calculate wear statistics
+  - _Requirements: 18_
+
+- [ ] 3.3.5 Write unit tests for outfit management
+  - Test save, retrieve, delete operations
+  - Test rating updates
+  - _Requirements: 16, 17, 18_
+
+- [ ]* 3.3.6 Write integration tests for outfit endpoints
+  - Test full outfit workflow
+  - _Requirements: 16, 17, 18_
+
+---
+
+## Phase 4: Personal Stylist Features (Sprint 4)
+
+### Sprint 4.1: Style Profile Learning
+
+- [ ] 4.1.1 Implement style profile data model
+  - Create `UserProfile` interface
+  - Include preferences: favorite colors, avoided colors, formality range
+  - Track learned patterns: frequently worn, frequently rejected
+  - _Requirements: 19_
+
+- [ ] 4.1.2 Implement preference-based filtering
+  - Boost items matching favorite colors
+  - Down-rank avoided items
+  - Prioritize preferred brands
+  - _Requirements: 12, 19_
+
+- [ ] 4.1.3 Create learning feedback system
+  - Adjust item scores based on ratings
+  - Reduce frequency of rejected categories
+  - Track learning progress indicator
+  - _Requirements: 19_
+
+- [ ] 4.1.4 Write unit tests for learning system
+  - Test preference updates
+  - Test scoring adjustments
+  - _Requirements: 19_
+
+### Sprint 4.2: Daily AURA Recommendation
+
+- [ ] 4.2.1 Implement daily recommendation algorithm
+  - Generate today's look based on context
+  - Check weather from previous day
+  - Suggest alternatives for repetition
+  - _Requirements: 21_
+
+- [ ] 4.2.2 Create daily outfit display component
+  - Show weather conditions and temperature
+  - Display recommended outfit
+  - Show explanation and item details
+  - _Requirements: 21_
+
+- [ ] 4.2.3 Implement days-since-worn tracking
+  - Calculate days since last worn per item
+  - Display "You haven't worn these in X days"
+  - _Requirements: 18, 21_
+
+- [ ] 4.2.4 Write unit tests for daily recommendations
+  - Test weather adjustment logic
+  - Test repetition avoidance
+  - _Requirements: 21_
+
+### Sprint 4.3: Natural Language Interaction
+
+- [ ] 4.3.1 Implement NLP request parsing
+  - Create intent detection system
+  - Extract context from user requests
+  - Handle ambiguous requests
+  - _Requirements: 20_
+
+- [ ] 4.3.2 Create chat interface component
+  - Message history display
+  - Input area for natural language
+  - Loading states for AI processing
+  - _Requirements: 20_
+
+- [ ] 4.3.3 Implement contextual assistance
+  - Auto-include relevant wardrobe items
+  - Ask clarifying questions when needed
+  - _Requirements: 20_
+
+- [ ] 4.3.4 Write unit tests for NLP parsing
+  - Test intent detection
+  - Test context extraction
+  - _Requirements: 20_
+
+---
+
+## Phase 5: Shopping Intelligence (Sprint 5)
+
+### Sprint 5.1: Shopping Analysis Core
+
+- [ ] 5.1.1 Implement shopping item data model
+  - Create `ShoppingItem` interface
+  - Include price, estimated value, upload timestamp
+  - Link to AI-detected metadata
+  - _Requirements: 23, 24_
+
+- [ ] 5.1.2 Implement duplicate detection algorithm
+  - Compare category, color, pattern, brand, silhouette
+  - Calculate similarity scores
+  - Categorize as NONE/LOW/MEDIUM/HIGH
+  - _Requirements: 24_
+
+- [ ] 5.1.3 Create outfit unlock calculation
+  - Estimate minimum/maximum new outfits
+  - Calculate based on existing wardrobe gaps
+  - Provide supporting reasoning
+  - _Requirements: 25_
+
+- [ ] 5.1.4 Implement price validation
+  - Compare against market estimates
+  - Calculate fair price range
+  - Flag significant overpricing (>20%)
+  - _Requirements: 27_
+
+- [ ] 5.1.5 Write unit tests for shopping analysis
+  - Test duplicate detection with various inputs
+  - Test price validation scenarios
+  - _Requirements: 24, 25, 27_
+
+### Sprint 5.2: Buying Recommendation System
+
+- [ ] 5.2.1 Implement verdict generation
+  - Create BUY/SKIP/CONSIDER logic
+  - Include reasoning for each verdict
+  - Calculate cost-per-wear estimate
+  - _Requirements: 26_
+
+- [ ] 5.2.2 Create shopping analysis UI component
+  - Display AI-detected metadata
+  - Show duplicate risk level
+  - Present verdict with reasoning
+  - _Requirements: 26_
+
+- [ ] 5.2.3 Implement shopping history tracking
+  - Save analysis results with timestamps
+  - Link to outfit unlocks
+  - Track purchase decisions
+  - _Requirements: 26_
+
+- [ ] 5.2.4 Write unit tests for recommendation system
+  - Test verdict generation logic
+  - Test reasoning generation
+  - _Requirements: 26_
+
+- [ ]* 5.2.5 Write integration tests for shopping endpoints
+  - Test complete shopping analysis flow
+  - _Requirements: 23, 24, 25, 26, 27_
+
+---
+
+## Phase 6: Travel Mode (Sprint 6)
+
+### Sprint 6.1: Trip Management
+
+- [ ] 6.1.1 Implement trip data model
+  - Create `Trip` interface
+  - Include destination, dates, activities, formal occasions
+  - Link to weather forecast
+  - _Requirements: 28_
+
+- [ ] 6.1.2 Create trip CRUD endpoints
+  - `POST /api/trips` - Create trip
+  - `GET /api/trips` - List trips
+  - `GET /api/trips/:id` - Get trip details
+  - `DELETE /api/trips/:id` - Delete trip
+  - _Requirements: 28_
+
+- [ ] 6.1.3 Implement weather integration for trips
+  - Fetch weather for trip destination and dates
+  - Store forecast data with trip
+  - Adjust recommendations based on forecast
+  - _Requirements: 22, 29, 30_
+
+- [ ] 6.1.4 Write unit tests for trip management
+  - Test CRUD operations
+  - Test weather integration
+  - _Requirements: 28, 29, 30_
+
+### Sprint 6.2: Packing Recommendations
+
+- [ ] 6.2.1 Implement packing algorithm
+  - Match wardrobe items to trip requirements
+  - Calculate outfit count per day
+  - Identify missing items
+  - _Requirements: 29, 30_
+
+- [ ] 6.2.2 Create packing list UI component
+  - Display daily outfit plan with previews
+  - Show packing checklist
+  - Indicate missing items
+  - _Requirements: 29, 30_
+
+- [ ] 6.2.3 Implement variety tracking
+  - Ensure different outfits across days
+  - Avoid repetition in trip packing
+  - _Requirements: 30_
+
+- [ ] 6.2.4 Write unit tests for packing recommendations
+  - Test outfit matching logic
+  - Test variety enforcement
+  - _Requirements: 29, 30_
+
+---
+
+## Phase 7: Mobile & Production (Sprint 7)
+
+### Sprint 7.1: Mobile Optimization
+
+- [ ] 7.1.1 Implement responsive navigation
+  - Bottom tab navigation for mobile (< 768px)
+  - Sidebar navigation for tablet/desktop
+  - Hamburger menu for mobile
+  - _Requirements: 31, 32_
+
+- [ ] 7.1.2 Optimize touch interactions
+  - Ensure minimum 44x44px touch targets
+  - Implement swipe gestures for navigation
+  - Add long-press context menus
+  - _Requirements: 31, 32_
+
+- [ ] 7.1.3 Add mobile camera integration
+  - Access device camera for photo upload
+  - Photo library selection
+  - Mobile-optimized cropping
+  - _Requirements: 4, 31_
+
+- [ ] 7.1.4 Implement performance optimizations
+  - Add image lazy loading
+  - Implement virtual scrolling for lists
+  - Add debounced search
+  - _Requirements: 36_
+
+- [ ] 7.1.5 Write visual regression tests for mobile
+  - Test layouts on 320px, 375px, 414px widths
+  - Test touch targets
+  - _Requirements: 31, 32_
+
+### Sprint 7.2: Production Readiness
+
+- [ ] 7.2.1 Implement offline support
+  - Queue pending actions
+  - Sync when online
+  - Conflict resolution strategy
+  - _Requirements: 37_
+
+- [ ] 7.2.2 Create onboarding flow
+  - Welcome screen
+  - First-item tutorial
+  - Outfit generation demo
+  - Skip option
+  - _Requirements: 38_
+
+- [ ] 7.2.3 Implement analytics dashboard
+  - Wardrobe statistics (total items, value, utilization)
+  - Category breakdown charts
+  - Most/least worn items
+  - _Requirements: 40_
+
+- [ ] 7.2.4 Implement data export functionality
+  - Export all data as JSON
+  - Include all items, outfits, history
+  - _Requirements: 39_
+
+- [ ] 7.2.5 Write unit tests for analytics
+  - Test statistics calculations
+  - Test export functionality
+  - _Requirements: 39, 40_
+
+---
+
+## Phase 8: Security & Polish (Sprint 8)
+
+### Sprint 8.1: API Security
+
+- [ ] 8.1.1 Implement authentication middleware
+  - Verify session tokens
+  - Extract user ID from token
+  - Add to request context
+  - _Requirements: 33_
+
+- [ ] 8.1.2 Implement rate limiting
+  - Configure rate limit per IP
+  - Return 429 status when exceeded
+  - _Requirements: 33_
+
+- [ ] 8.1.3 Implement input validation
+  - Validate all input schemas
+  - Sanitize string inputs
+  - _Requirements: 35_
+
+- [ ] 8.1.4 Write security tests
+  - Test authentication bypass prevention
+  - Test input validation
+  - _Requirements: 33, 34, 35_
+
+### Sprint 8.2: Testing & Documentation
+
+- [ ] 8.2.1 Write end-to-end tests
+  - Complete user flows
+  - Mobile responsive tests
+  - Authentication flows
+  - _Requirements: All_
+
+- [ ] 8.2.2 Create API documentation
+  - Document all endpoints
+  - Include request/response examples
+  - _Requirements: All_
+
+- [ ] 8.2.3 Create developer onboarding guide
+  - Setup instructions
+  - Architecture overview
+  - Testing guide
+  - _Requirements: All_
+
+- [ ] 8.2.4 Performance testing
+  - Verify response time SLAs
+  - Test concurrent user handling
+  - _Requirements: 36_
+
+---
+
+## Checkpoints
+
+- [ ] Checkpoint 1: Ensure Phase 1 foundation is complete
+  - Wardrobe CRUD operations working
+  - AI image analysis functional
+  - Basic outfit generation working
+  - Ask the user if questions arise.
+
+- [ ] Checkpoint 2: Ensure Phase 2 features are complete
+  - Shopping intelligence fully implemented
+  - Style learning system working
+  - Daily AURA recommendations functional
+  - Ask the user if questions arise.
+
+- [ ] Checkpoint 3: Ensure Phase 3 features are complete
+  - Travel mode fully functional
+  - Mobile responsive across all breakpoints
+  - Onboarding flow complete
+  - Ask the user if questions arise.
+
+- [ ] Checkpoint 4: Ensure all tests pass and documentation is complete
+  - Unit test coverage > 80%
+  - Integration tests for all major flows
+  - API documentation complete
+  - Ask the user if questions arise.
+
+---
+
+## Notes
+
+- Tasks marked with `*` are optional and can be skipped for faster MVP
+- Each task references specific requirements for traceability
+- Checkpoints ensure incremental validation
+- Unit tests validate specific scenarios and edge cases
+- Integration tests validate end-to-end workflows
+- **MVP Scope (Sprints 1-3):** Focus on Requirements 1-27 (Authentication through Shopping Intelligence)
+
+---
+
+## Task Dependency Graph
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": ["1.1.1", "1.1.2", "1.1.3", "1.2.1", "2.1.1"]
+    },
+    {
+      "id": 1,
+      "tasks": ["1.1.4", "1.2.2", "1.2.3", "1.2.4", "2.1.2", "2.1.3"]
+    },
+    {
+      "id": 2,
+      "tasks": ["1.2.5", "1.3.1", "1.3.2", "1.3.3", "2.2.1", "2.2.2", "3.1.1"]
+    },
+    {
+      "id": 3,
+      "tasks": ["1.2.6", "1.3.4", "2.2.3", "2.2.4", "2.2.5", "3.1.2", "3.1.3", "3.1.4"]
+    },
+    {
+      "id": 4,
+      "tasks": ["1.3.5", "1.3.6", "2.3.1", "2.3.2", "2.3.3", "3.1.5", "3.2.1", "3.2.2", "3.2.3"]
+    },
+    {
+      "id": 5,
+      "tasks": ["3.2.4", "3.2.5", "3.3.1", "3.3.2", "3.3.3", "3.3.4"]
+    },
+    {
+      "id": 6,
+      "tasks": ["3.3.5", "3.3.6", "4.1.1", "4.1.2", "4.1.3", "4.2.1"]
+    },
+    {
+      "id": 7,
+      "tasks": ["4.2.2", "4.2.3", "4.2.4", "4.3.1", "4.3.2", "4.3.3", "5.1.1"]
+    },
+    {
+      "id": 8,
+      "tasks": ["5.1.2", "5.1.3", "5.1.4", "5.1.5", "5.2.1", "5.2.2", "5.2.3"]
+    },
+    {
+      "id": 9,
+      "tasks": ["5.2.4", "5.2.5", "6.1.1", "6.1.2", "6.1.3", "6.2.1"]
+    },
+    {
+      "id": 10,
+      "tasks": ["6.2.2", "6.2.3", "6.2.4", "7.1.1", "7.1.2", "7.1.3", "7.1.4"]
+    },
+    {
+      "id": 11,
+      "tasks": ["7.1.5", "7.2.1", "7.2.2", "7.2.3", "7.2.4", "7.2.5", "8.1.1"]
+    },
+    {
+      "id": 12,
+      "tasks": ["8.1.2", "8.1.3", "8.1.4", "8.2.1", "8.2.2", "8.2.3", "8.2.4"]
+    }
+  ]
+}
+```

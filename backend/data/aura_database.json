@@ -37,7 +37,7 @@
   },
   "wardrobe": [
     {
-      "id": "item_test_1787034466260",
+      "id": "item_test_1787571005097",
       "name": "Cashmere Fisherman Rib Cardigan",
       "category": "Tops",
       "subcategory": "Cardigan",
@@ -55,13 +55,13 @@
       "timesWorn": 1,
       "status": "clean",
       "isDirty": false,
-      "dateAdded": "2026-08-18T06:27:46.260Z",
-      "createdAt": "2026-08-18T06:27:46.261Z",
-      "updatedAt": "2026-08-18T06:27:46.263Z",
-      "lastWorn": "2026-08-18T06:27:46.263Z"
+      "dateAdded": "2026-08-24T11:30:05.097Z",
+      "createdAt": "2026-08-24T11:30:05.099Z",
+      "updatedAt": "2026-08-24T11:30:05.106Z",
+      "lastWorn": "2026-08-24"
     },
     {
-      "id": "item_test_1787027690475",
+      "id": "item_test_1787559236284",
       "name": "Cashmere Fisherman Rib Cardigan",
       "category": "Tops",
       "subcategory": "Cardigan",
@@ -76,40 +76,42 @@
       ],
       "estimatedValueUSD": 380,
       "condition": "Excellent",
-      "timesWorn": 1,
+      "timesWorn": 3,
       "status": "clean",
       "isDirty": false,
-      "dateAdded": "2026-08-18T04:34:50.475Z",
-      "createdAt": "2026-08-18T04:34:50.476Z",
-      "updatedAt": "2026-08-18T04:34:50.478Z",
-      "lastWorn": "2026-08-18T04:34:50.478Z"
+      "dateAdded": "2026-08-24T08:13:56.284Z",
+      "createdAt": "2026-08-24T08:13:56.286Z",
+      "updatedAt": "2026-08-24T08:14:41.207Z",
+      "lastWorn": "2026-08-24"
     },
     {
-      "id": "item_test_1787027556977",
-      "name": "Cashmere Fisherman Rib Cardigan",
-      "category": "Tops",
-      "subcategory": "Cardigan",
-      "colorPrimary": "#D97706",
-      "pattern": "Ribbed",
-      "material": "100% Cashmere",
-      "brand": "Studio Nicholson",
-      "formalityScore": 7,
+      "name": "Fleece Jacket",
+      "category": "Outerwear",
+      "subcategory": "Jacket",
+      "colorPrimary": "#4A90E2",
+      "pattern": "Solid",
+      "material": "Fleece",
+      "brand": null,
+      "silhouette": "Fitted",
+      "fit": "Regular",
+      "formalityScore": 3,
       "seasonality": [
+        "Winter",
         "Fall",
-        "Winter"
+        "Spring"
       ],
-      "estimatedValueUSD": 380,
+      "estimatedValueUSD": 90,
       "condition": "Excellent",
-      "timesWorn": 1,
+      "timesWorn": 18,
+      "dateAdded": "2026-08-24T08:09:40.398Z",
+      "createdAt": "2026-08-24T08:09:40.403Z",
+      "updatedAt": "2026-08-24T11:30:05.106Z",
       "status": "clean",
       "isDirty": false,
-      "dateAdded": "2026-08-18T04:32:36.977Z",
-      "createdAt": "2026-08-18T04:32:36.978Z",
-      "updatedAt": "2026-08-18T04:32:36.980Z",
-      "lastWorn": "2026-08-18T04:32:36.980Z"
+      "lastWorn": "2026-08-24"
     },
     {
-      "id": "item_test_1786989276719",
+      "id": "item_test_1787558479573",
       "name": "Cashmere Fisherman Rib Cardigan",
       "category": "Tops",
       "subcategory": "Cardigan",
@@ -127,13 +129,13 @@
       "timesWorn": 1,
       "status": "clean",
       "isDirty": false,
-      "dateAdded": "2026-08-17T17:54:36.719Z",
-      "createdAt": "2026-08-17T17:54:36.721Z",
-      "updatedAt": "2026-08-17T17:54:36.724Z",
-      "lastWorn": "2026-08-17T17:54:36.724Z"
+      "dateAdded": "2026-08-24T08:01:19.573Z",
+      "createdAt": "2026-08-24T08:01:19.579Z",
+      "updatedAt": "2026-08-24T08:01:19.587Z",
+      "lastWorn": "2026-08-24"
     },
     {
-      "id": "item_test_1786989253249",
+      "id": "item_test_1787557399488",
       "name": "Cashmere Fisherman Rib Cardigan",
       "category": "Tops",
       "subcategory": "Cardigan",
@@ -151,10 +153,472 @@
       "timesWorn": 1,
       "status": "clean",
       "isDirty": false,
-      "dateAdded": "2026-08-17T17:54:13.249Z",
-      "createdAt": "2026-08-17T17:54:13.252Z",
-      "updatedAt": "2026-08-17T17:54:13.253Z",
-      "lastWorn": "2026-08-17T17:54:13.253Z"
+      "dateAdded": "2026-08-24T07:43:19.488Z",
+      "createdAt": "2026-08-24T07:43:19.490Z",
+      "updatedAt": "2026-08-24T07:43:19.494Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787557383535",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:43:03.535Z",
+      "createdAt": "2026-08-24T07:43:03.536Z",
+      "updatedAt": "2026-08-24T07:43:03.541Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556963074",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:36:03.074Z",
+      "createdAt": "2026-08-24T07:36:03.075Z",
+      "updatedAt": "2026-08-24T07:36:03.079Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556893207",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:34:53.207Z",
+      "createdAt": "2026-08-24T07:34:53.208Z",
+      "updatedAt": "2026-08-24T07:34:53.211Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556769076",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:32:49.076Z",
+      "createdAt": "2026-08-24T07:32:49.078Z",
+      "updatedAt": "2026-08-24T07:32:49.081Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556714855",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:31:54.855Z",
+      "createdAt": "2026-08-24T07:31:54.858Z",
+      "updatedAt": "2026-08-24T07:31:54.862Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556705556",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:31:45.556Z",
+      "createdAt": "2026-08-24T07:31:45.557Z",
+      "updatedAt": "2026-08-24T07:31:45.561Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556631302",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 3,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:30:31.302Z",
+      "createdAt": "2026-08-24T07:30:31.304Z",
+      "updatedAt": "2026-08-24T07:31:04.877Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556518530",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 6,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:28:38.530Z",
+      "createdAt": "2026-08-24T07:28:38.531Z",
+      "updatedAt": "2026-08-24T07:31:04.876Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556516571",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 3,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:28:36.571Z",
+      "createdAt": "2026-08-24T07:28:36.572Z",
+      "updatedAt": "2026-08-24T07:29:19.737Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787556508942",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-24T07:28:28.942Z",
+      "createdAt": "2026-08-24T07:28:28.943Z",
+      "updatedAt": "2026-08-24T07:28:28.946Z",
+      "lastWorn": "2026-08-24"
+    },
+    {
+      "id": "item_test_1787320669076",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 2,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T13:57:49.076Z",
+      "createdAt": "2026-08-21T13:57:49.078Z",
+      "updatedAt": "2026-08-24T07:16:02.697Z",
+      "lastWorn": "2026-08-24T07:16:02.697Z"
+    },
+    {
+      "id": "item_test_1787320272824",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T13:51:12.824Z",
+      "createdAt": "2026-08-21T13:51:12.825Z",
+      "updatedAt": "2026-08-21T13:51:12.826Z",
+      "lastWorn": "2026-08-21T13:51:12.826Z"
+    },
+    {
+      "id": "item_test_1787319947019",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T13:45:47.019Z",
+      "createdAt": "2026-08-21T13:45:47.020Z",
+      "updatedAt": "2026-08-21T13:45:47.022Z",
+      "lastWorn": "2026-08-21T13:45:47.022Z"
+    },
+    {
+      "id": "item_test_1787319557336",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T13:39:17.336Z",
+      "createdAt": "2026-08-21T13:39:17.337Z",
+      "updatedAt": "2026-08-21T13:39:17.339Z",
+      "lastWorn": "2026-08-21T13:39:17.339Z"
+    },
+    {
+      "id": "item_test_1787315499432",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T12:31:39.432Z",
+      "createdAt": "2026-08-21T12:31:39.434Z",
+      "updatedAt": "2026-08-21T12:31:39.436Z",
+      "lastWorn": "2026-08-21T12:31:39.436Z"
+    },
+    {
+      "id": "item_test_1787314535211",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T12:15:35.211Z",
+      "createdAt": "2026-08-21T12:15:35.213Z",
+      "updatedAt": "2026-08-21T12:15:35.215Z",
+      "lastWorn": "2026-08-21T12:15:35.215Z"
+    },
+    {
+      "id": "item-img-flow-1787297533886",
+      "name": "Fine Knit Merino Crewneck",
+      "category": "Tops",
+      "subcategory": "Knitwear",
+      "colorPrimary": "#27272A",
+      "pattern": "Solid",
+      "material": "100% Merino Wool",
+      "brand": null,
+      "silhouette": "Relaxed Tailored",
+      "fit": "Regular",
+      "formalityScore": 6,
+      "seasonality": [
+        "Fall",
+        "Winter",
+        "Spring"
+      ],
+      "estimatedValueUSD": 160,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T07:32:13.886Z",
+      "imageUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP...",
+      "createdAt": "2026-08-21T07:32:13.887Z",
+      "updatedAt": "2026-08-21T13:51:31.337Z",
+      "lastWorn": "2026-08-21T13:51:31.337Z"
+    },
+    {
+      "id": "item-create-test-1787297533869",
+      "name": "Navy Merino Wool Sweater",
+      "category": "Tops",
+      "subcategory": "Sweater",
+      "colorPrimary": "#1E293B",
+      "pattern": "Solid",
+      "material": "100% Merino Wool",
+      "brand": "Arc'teryx",
+      "formalityScore": 6,
+      "seasonality": [
+        "Fall",
+        "Winter",
+        "Spring"
+      ],
+      "estimatedValueUSD": 150,
+      "condition": "Excellent",
+      "timesWorn": 2,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T07:32:13.869Z",
+      "imageUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP...",
+      "createdAt": "2026-08-21T07:32:13.870Z",
+      "updatedAt": "2026-08-21T14:00:08.245Z",
+      "lastWorn": "2026-08-21T14:00:08.245Z"
+    },
+    {
+      "id": "item_test_1787296660349",
+      "name": "Cashmere Fisherman Rib Cardigan",
+      "category": "Tops",
+      "subcategory": "Cardigan",
+      "colorPrimary": "#D97706",
+      "pattern": "Ribbed",
+      "material": "100% Cashmere",
+      "brand": "Studio Nicholson",
+      "formalityScore": 7,
+      "seasonality": [
+        "Fall",
+        "Winter"
+      ],
+      "estimatedValueUSD": 380,
+      "condition": "Excellent",
+      "timesWorn": 1,
+      "status": "clean",
+      "isDirty": false,
+      "dateAdded": "2026-08-21T07:17:40.349Z",
+      "createdAt": "2026-08-21T07:17:40.354Z",
+      "updatedAt": "2026-08-21T07:17:40.355Z",
+      "lastWorn": "2026-08-21T07:17:40.355Z"
     },
     {
       "id": "item-1",
@@ -175,11 +639,11 @@
       "estimatedValueUSD": 520,
       "condition": "Excellent",
       "timesWorn": 18,
+      "status": "clean",
       "dateAdded": "2026-05-10",
       "imageUrl": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop&q=80",
-      "status": "clean",
       "createdAt": "2026-05-10",
-      "updatedAt": "2026-08-18T06:27:46.263Z",
+      "updatedAt": "2026-08-24T11:30:05.108Z",
       "isDirty": false
     },
     {
@@ -201,11 +665,11 @@
       "estimatedValueUSD": 25,
       "condition": "Good",
       "timesWorn": 42,
+      "status": "clean",
       "dateAdded": "2026-01-15",
       "imageUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80",
-      "status": "clean",
       "createdAt": "2026-01-15",
-      "updatedAt": "2026-08-17T17:54:13.251Z"
+      "updatedAt": "2026-08-21T07:17:40.353Z"
     },
     {
       "id": "item-3",
@@ -224,13 +688,13 @@
       ],
       "estimatedValueUSD": 240,
       "condition": "Excellent",
-      "timesWorn": 31,
+      "timesWorn": 35,
+      "status": "clean",
       "dateAdded": "2026-03-02",
       "imageUrl": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&auto=format&fit=crop&q=80",
-      "status": "clean",
       "createdAt": "2026-03-02",
-      "updatedAt": "2026-08-18T06:27:46.263Z",
-      "lastWorn": "2026-08-18T06:27:46.263Z"
+      "updatedAt": "2026-08-24T11:30:05.106Z",
+      "lastWorn": "2026-08-24"
     },
     {
       "id": "item-4",
@@ -249,13 +713,13 @@
       ],
       "estimatedValueUSD": 415,
       "condition": "Good",
-      "timesWorn": 69,
+      "timesWorn": 71,
+      "status": "clean",
       "dateAdded": "2025-11-20",
       "imageUrl": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&auto=format&fit=crop&q=80",
-      "status": "clean",
       "createdAt": "2025-11-20",
-      "updatedAt": "2026-08-18T06:27:46.263Z",
-      "lastWorn": "2026-08-18T06:27:46.263Z"
+      "updatedAt": "2026-08-21T13:57:49.080Z",
+      "lastWorn": "2026-08-21T13:57:49.080Z"
     },
     {
       "id": "item-5",
@@ -274,11 +738,11 @@
       "estimatedValueUSD": 190,
       "condition": "Excellent",
       "timesWorn": 12,
+      "status": "clean",
       "dateAdded": "2026-02-14",
       "imageUrl": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&auto=format&fit=crop&q=80",
-      "status": "clean",
       "createdAt": "2026-02-14",
-      "updatedAt": "2026-08-17T17:54:13.251Z"
+      "updatedAt": "2026-08-21T07:17:40.353Z"
     },
     {
       "id": "item-6",
@@ -297,12 +761,13 @@
       ],
       "estimatedValueUSD": 295,
       "condition": "Excellent",
-      "timesWorn": 15,
+      "timesWorn": 27,
+      "status": "clean",
       "dateAdded": "2026-04-10",
       "imageUrl": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&auto=format&fit=crop&q=80",
-      "status": "clean",
       "createdAt": "2026-04-10",
-      "updatedAt": "2026-08-17T17:54:13.251Z"
+      "updatedAt": "2026-08-24T08:01:19.587Z",
+      "lastWorn": "2026-08-24"
     },
     {
       "id": "item-7",
@@ -321,12 +786,13 @@
       ],
       "estimatedValueUSD": 549,
       "condition": "Excellent",
-      "timesWorn": 22,
+      "timesWorn": 36,
+      "status": "clean",
       "dateAdded": "2025-12-01",
       "imageUrl": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=600&auto=format&fit=crop&q=80",
-      "status": "clean",
       "createdAt": "2025-12-01",
-      "updatedAt": "2026-08-17T17:54:13.251Z"
+      "updatedAt": "2026-08-24T11:30:05.106Z",
+      "lastWorn": "2026-08-24"
     },
     {
       "id": "item-8",
@@ -344,25 +810,30 @@
       ],
       "estimatedValueUSD": 1450,
       "condition": "Excellent",
-      "timesWorn": 13,
+      "timesWorn": 27,
+      "status": "clean",
       "dateAdded": "2026-03-18",
       "imageUrl": "https://images.unsplash.com/photo-1544441893-675973e31985?w=600&auto=format&fit=crop&q=80",
-      "status": "clean",
       "createdAt": "2026-03-18",
-      "updatedAt": "2026-08-18T06:27:46.263Z",
-      "lastWorn": "2026-08-18T06:27:46.263Z"
+      "updatedAt": "2026-08-24T08:01:19.587Z",
+      "lastWorn": "2026-08-24"
     }
   ],
   "wearEvents": [
     {
-      "outfitId": "outfit-det-1787034466262-0",
+      "id": "wear_1787571005106",
+      "outfitId": "outfit-1787571005106-0",
       "outfitTitle": "Smart Architectural Contrast",
       "itemIds": [
-        "item_test_1787034466260",
+        "item_test_1787571005097",
         "item-3",
-        "item-4",
-        "item-8"
+        "item-7",
+        null
       ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T11:30:05.106Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T11:30:05.106Z",
       "context": {
         "temperature": "18°C",
         "weather": "Cloudy",
@@ -370,62 +841,50 @@
         "mood": "Confident",
         "location": "Johannesburg",
         "formalityPreference": 8
-      },
-      "feedback": "loved",
-      "id": "wear_1787034466263",
-      "timestamp": "2026-08-18T06:27:46.263Z"
+      }
     },
     {
-      "outfitId": "outfit-det-1787027690478-0",
-      "outfitTitle": "Smart Architectural Contrast",
+      "id": "wear_1787559281207",
+      "outfitId": "minimal-test",
+      "outfitTitle": "Daily Ensemble",
       "itemIds": [
-        "item_test_1787027690475",
-        "item-3",
-        "item-4",
-        "item-8"
+        "item_test_1787559236284"
       ],
-      "context": {
-        "temperature": "18°C",
-        "weather": "Cloudy",
-        "occasion": "Work Pitch",
-        "mood": "Confident",
-        "location": "Johannesburg",
-        "formalityPreference": 8
-      },
-      "feedback": "loved",
-      "id": "wear_1787027690478",
-      "timestamp": "2026-08-18T04:34:50.478Z"
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T08:14:41.207Z",
+      "timestamp": "2026-08-24T08:14:41.207Z"
     },
     {
-      "outfitId": "outfit-det-1787027556980-0",
-      "outfitTitle": "Smart Architectural Contrast",
+      "id": "wear_1787559281206",
+      "outfitId": "test-outfit-1787559281206",
+      "outfitTitle": "Test Outfit",
       "itemIds": [
-        "item_test_1787027556977",
-        "item-3",
-        "item-4",
-        "item-8"
+        "item_test_1787559236284",
+        null
       ],
-      "context": {
-        "temperature": "18°C",
-        "weather": "Cloudy",
-        "occasion": "Work Pitch",
-        "mood": "Confident",
-        "location": "Johannesburg",
-        "formalityPreference": 8
-      },
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T08:14:41.206Z",
+      "occasion": "Testing",
+      "weather": "Cloudy",
+      "temperature": "20°C",
       "feedback": "loved",
-      "id": "wear_1787027556980",
-      "timestamp": "2026-08-18T04:32:36.980Z"
+      "notes": "Test wear event",
+      "timestamp": "2026-08-24T08:14:41.206Z"
     },
     {
-      "outfitId": "outfit-det-1786989276723-0",
+      "id": "wear_1787559236292",
+      "outfitId": "outfit-1787559236292-0",
       "outfitTitle": "Smart Architectural Contrast",
       "itemIds": [
-        "item_test_1786989276719",
+        "item_test_1787559236284",
         "item-3",
-        "item-4",
-        "item-8"
+        "item-7",
+        null
       ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T08:13:56.292Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T08:13:56.292Z",
       "context": {
         "temperature": "18°C",
         "weather": "Cloudy",
@@ -433,16 +892,420 @@
         "mood": "Confident",
         "location": "Johannesburg",
         "formalityPreference": 8
-      },
-      "feedback": "loved",
-      "id": "wear_1786989276724",
-      "timestamp": "2026-08-17T17:54:36.724Z"
+      }
     },
     {
-      "outfitId": "outfit-det-1786989253253-0",
+      "id": "wear_1787558479587",
+      "outfitId": "outfit-1787558479587-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787558479573",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T08:01:19.587Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T08:01:19.587Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787557399494",
+      "outfitId": "outfit-1787557399494-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787557399488",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:43:19.494Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:43:19.494Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787557383541",
+      "outfitId": "outfit-1787557383540-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787557383535",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:43:03.541Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:43:03.541Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556963079",
+      "outfitId": "outfit-1787556963078-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556963074",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:36:03.079Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:36:03.079Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556893211",
+      "outfitId": "outfit-1787556893211-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556893207",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:34:53.211Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:34:53.211Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556769081",
+      "outfitId": "outfit-det-1787556769081-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556769076",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:32:49.081Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:32:49.081Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556714862",
+      "outfitId": "outfit-det-1787556714862-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556714855",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:31:54.862Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:31:54.862Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556705561",
+      "outfitId": "outfit-det-1787556705561-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556705556",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:31:45.561Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:31:45.561Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556664877",
+      "outfitId": "minimal-test",
+      "outfitTitle": "Daily Ensemble",
+      "itemIds": [
+        "item_test_1787556631302"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:31:04.877Z",
+      "timestamp": "2026-08-24T07:31:04.877Z"
+    },
+    {
+      "id": "wear_1787556664876",
+      "outfitId": "test-outfit-1787556664876",
+      "outfitTitle": "Test Outfit",
+      "itemIds": [
+        "item_test_1787556631302",
+        "item_test_1787556518530"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:31:04.876Z",
+      "occasion": "Testing",
+      "weather": "Cloudy",
+      "temperature": "20°C",
+      "feedback": "loved",
+      "notes": "Test wear event",
+      "timestamp": "2026-08-24T07:31:04.876Z"
+    },
+    {
+      "id": "wear_1787556631308",
+      "outfitId": "outfit-det-1787556631308-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556631302",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:30:31.308Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:30:31.308Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556559738",
+      "outfitId": "minimal-test",
+      "outfitTitle": "Daily Ensemble",
+      "itemIds": [
+        "item_test_1787556518530"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:29:19.738Z",
+      "timestamp": "2026-08-24T07:29:19.738Z"
+    },
+    {
+      "id": "wear_1787556559737",
+      "outfitId": "test-outfit-1787556559737",
+      "outfitTitle": "Test Outfit",
+      "itemIds": [
+        "item_test_1787556518530",
+        "item_test_1787556516571"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:29:19.737Z",
+      "occasion": "Testing",
+      "weather": "Cloudy",
+      "temperature": "20°C",
+      "feedback": "loved",
+      "notes": "Test wear event",
+      "timestamp": "2026-08-24T07:29:19.737Z"
+    },
+    {
+      "id": "wear_1787556527078",
+      "outfitId": "minimal-test",
+      "outfitTitle": "Daily Ensemble",
+      "itemIds": [
+        "item_test_1787556518530"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:28:47.078Z",
+      "timestamp": "2026-08-24T07:28:47.078Z"
+    },
+    {
+      "id": "wear_1787556527077",
+      "outfitId": "empty-test",
+      "outfitTitle": "Empty",
+      "itemIds": [],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:28:47.077Z",
+      "timestamp": "2026-08-24T07:28:47.077Z"
+    },
+    {
+      "id": "wear_1787556527076",
+      "outfitId": "test-outfit-1787556527076",
+      "outfitTitle": "Test Outfit",
+      "itemIds": [
+        "item_test_1787556518530",
+        "item_test_1787556516571"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:28:47.076Z",
+      "occasion": "Testing",
+      "weather": "Cloudy",
+      "temperature": "20°C",
+      "feedback": "loved",
+      "notes": "Test wear event",
+      "timestamp": "2026-08-24T07:28:47.076Z"
+    },
+    {
+      "id": "wear_1787556518534",
+      "outfitId": "outfit-det-1787556518534-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556518530",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:28:38.534Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:28:38.534Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556516576",
+      "outfitId": "outfit-det-1787556516576-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556516571",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:28:36.576Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:28:36.576Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "id": "wear_1787556508946",
+      "outfitId": "outfit-det-1787556508946-0",
+      "outfitTitle": "Executive Modern Tailoring",
+      "itemIds": [
+        "item_test_1787556508942",
+        "item-6",
+        "item-7",
+        "item-8"
+      ],
+      "wornDate": "2026-08-24",
+      "wornAt": "2026-08-24T07:28:28.946Z",
+      "feedback": "loved",
+      "timestamp": "2026-08-24T07:28:28.946Z",
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      }
+    },
+    {
+      "outfitId": "test-outfit-1",
+      "outfitTitle": "Test Wear Event",
+      "itemIds": [
+        "item_test_1787320669076",
+        "formal-pants-1787555762696"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Casual Coffee",
+        "mood": "Relaxed",
+        "location": "Johannesburg",
+        "formalityPreference": 4
+      },
+      "feedback": "loved",
+      "id": "wear_1787555762697",
+      "timestamp": "2026-08-24T07:16:02.697Z"
+    },
+    {
+      "outfitId": "test-outfit-1",
+      "outfitTitle": "Test Wear Event",
+      "itemIds": [
+        "item-create-test-1787297533869",
+        "formal-pants-1787320808243"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Casual Coffee",
+        "mood": "Relaxed",
+        "location": "Johannesburg",
+        "formalityPreference": 4
+      },
+      "feedback": "loved",
+      "id": "wear_1787320808245",
+      "timestamp": "2026-08-21T14:00:08.245Z"
+    },
+    {
+      "outfitId": "outfit-det-1787320669080-0",
       "outfitTitle": "Smart Architectural Contrast",
       "itemIds": [
-        "item_test_1786989253249",
+        "item_test_1787320669076",
         "item-3",
         "item-4",
         "item-8"
@@ -456,8 +1319,153 @@
         "formalityPreference": 8
       },
       "feedback": "loved",
-      "id": "wear_1786989253253",
-      "timestamp": "2026-08-17T17:54:13.253Z"
+      "id": "wear_1787320669080",
+      "timestamp": "2026-08-21T13:57:49.080Z"
+    },
+    {
+      "outfitId": "test-outfit-1",
+      "outfitTitle": "Test Wear Event",
+      "itemIds": [
+        "item-img-flow-1787297533886",
+        "formal-pants-1787320291335"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Casual Coffee",
+        "mood": "Relaxed",
+        "location": "Johannesburg",
+        "formalityPreference": 4
+      },
+      "feedback": "loved",
+      "id": "wear_1787320291337",
+      "timestamp": "2026-08-21T13:51:31.337Z"
+    },
+    {
+      "outfitId": "outfit-det-1787320272826-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1787320272824",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1787320272826",
+      "timestamp": "2026-08-21T13:51:12.826Z"
+    },
+    {
+      "outfitId": "outfit-det-1787319947021-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1787319947019",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1787319947022",
+      "timestamp": "2026-08-21T13:45:47.022Z"
+    },
+    {
+      "outfitId": "outfit-det-1787319557339-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1787319557336",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1787319557339",
+      "timestamp": "2026-08-21T13:39:17.339Z"
+    },
+    {
+      "outfitId": "outfit-det-1787315499436-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1787315499432",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1787315499436",
+      "timestamp": "2026-08-21T12:31:39.436Z"
+    },
+    {
+      "outfitId": "outfit-det-1787314535215-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1787314535211",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1787314535215",
+      "timestamp": "2026-08-21T12:15:35.215Z"
+    },
+    {
+      "outfitId": "outfit-det-1787296660355-0",
+      "outfitTitle": "Smart Architectural Contrast",
+      "itemIds": [
+        "item_test_1787296660349",
+        "item-3",
+        "item-4",
+        "item-8"
+      ],
+      "context": {
+        "temperature": "18°C",
+        "weather": "Cloudy",
+        "occasion": "Work Pitch",
+        "mood": "Confident",
+        "location": "Johannesburg",
+        "formalityPreference": 8
+      },
+      "feedback": "loved",
+      "id": "wear_1787296660355",
+      "timestamp": "2026-08-21T07:17:40.355Z"
     },
     {
       "id": "wear-seed-1",
@@ -468,7 +1476,7 @@
         "item-3",
         "item-4"
       ],
-      "timestamp": "2026-08-15T17:54:13.251Z",
+      "timestamp": "2026-08-19T07:17:40.353Z",
       "context": {
         "temperature": "18°C",
         "weather": "Cloudy",
@@ -481,5 +1489,5 @@
     }
   ],
   "shoppingHistory": [],
-  "updatedAt": "2026-08-18T06:27:46.263Z"
+  "updatedAt": "2026-08-24T11:30:05.109Z"
 }

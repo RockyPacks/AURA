@@ -1,6 +1,16 @@
 import fs from 'fs';
 import path from 'path';
-import { WardrobeItem, WearEvent, ShoppingAnalysis, StylePreference, ProfileAnalytics } from './types.js';
+import { 
+  WardrobeItem, 
+  WearEvent, 
+  ShoppingAnalysis, 
+  StylePreference, 
+  ProfileAnalytics,
+  WearStats,
+  DaysSinceWornResult,
+  WearStreak,
+  SeasonalUsageData
+} from './types.js';
 
 const DB_DIR = path.resolve(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'aura_database.json');
@@ -211,6 +221,8 @@ function initDb(): AuraDatabaseSchema {
         outfitId: 'outfit-seed-1',
         outfitTitle: 'Signature Streetwear Luxe',
         itemIds: ['item-2', 'item-3', 'item-4'],
+        wornDate: new Date(Date.now() - 86400000 * 2).toISOString().split('T')[0],
+        wornAt: new Date(Date.now() - 86400000 * 2).toISOString(),
         timestamp: new Date(Date.now() - 86400000 * 2).toISOString(),
         context: {
           temperature: '18°C',
@@ -233,7 +245,7 @@ function initDb(): AuraDatabaseSchema {
 
 let cachedDb: AuraDatabaseSchema | null = null;
 
-function getDb(): AuraDatabaseSchema {
+export function getDb(): AuraDatabaseSchema {
   if (!cachedDb) {
     cachedDb = initDb();
   }
@@ -319,24 +331,44 @@ export function deleteWardrobeItem(id: string): boolean {
   return false;
 }
 
-export function logWearEvent(event: Omit<WearEvent, 'id' | 'timestamp'>): WearEvent {
+export function logWearEvent(event: Partial<WearEvent> & { outfitId: string; itemIds: string[] }): WearEvent {
+  // Validate required fields
+  if (!event.itemIds || event.itemIds.length === 0) {
+    throw new Error('At least one item must be included in a wear event');
+  }
+
   const db = getDb();
-  const now = new Date().toISOString();
+  const now = new Date();
+  const wornAt = event.wornAt || now.toISOString();
+  const wornDate = event.wornDate || now.toISOString().split('T')[0];
+  
   const newEvent: WearEvent = {
-    ...event,
-    id: `wear_${Date.now()}`,
-    timestamp: now
+    id: event.id || `wear_${Date.now()}`,
+    outfitId: event.outfitId,
+    outfitTitle: event.outfitTitle || 'Daily Ensemble',
+    itemIds: event.itemIds,
+    wornDate,
+    wornAt,
+    occasion: event.occasion,
+    weather: event.weather,
+    temperature: event.temperature,
+    feedback: event.feedback,
+    notes: event.notes,
+    // Legacy support
+    timestamp: wornAt,
+    context: event.context
   };
 
   db.wearEvents = [newEvent, ...db.wearEvents];
 
+  // Update item wear tracking
   db.wardrobe = db.wardrobe.map(item => {
     if (event.itemIds.includes(item.id)) {
       return {
         ...item,
         timesWorn: (item.timesWorn || 0) + 1,
-        lastWorn: now,
-        updatedAt: now
+        lastWorn: wornDate,
+        updatedAt: wornAt
       };
     }
     return item;
@@ -431,5 +463,289 @@ export function calculateRealProfileAnalytics(): ProfileAnalytics {
     totalWearEvents: wearEvents.length,
     isLearningPhase,
     primaryArchetype: db.user.preferences.aestheticArchetype || 'Quiet Luxury & Modern Minimalist'
+  };
+}
+
+/**
+ * Get comprehensive wear statistics
+ * **Validates: Requirement 18**
+ */
+export function getWearStats(): WearStats {
+  const db = getDb();
+  const wardrobe = db.wardrobe;
+  const wearEvents = db.wearEvents;
+
+  const wornItems = wardrobe.filter(item => (item.timesWorn || 0) > 0);
+  const totalWearEvents = wearEvents.length;
+  const itemsWorn = wornItems.length;
+
+  // Calculate average wear per item
+  const averageWearPerItem = itemsWorn > 0
+    ? wornItems.reduce((sum, item) => sum + (item.timesWorn || 0), 0) / itemsWorn
+    : 0;
+
+  // Most worn item
+  const mostWornItem = wornItems.length > 0
+    ? (() => {
+      const item = wornItems.reduce((max, current) =>
+        (current.timesWorn || 0) > (max.timesWorn || 0) ? current : max
+      );
+      return { id: item.id, name: item.name, timesWorn: item.timesWorn || 0 };
+    })()
+    : null;
+
+  // Least worn item (among worn items)
+  const leastWornItem = wornItems.length > 0
+    ? (() => {
+      const item = wornItems.reduce((min, current) =>
+        (current.timesWorn || 0) < (min.timesWorn || 0) ? current : min
+      );
+      return { id: item.id, name: item.name, timesWorn: item.timesWorn || 0 };
+    })()
+    : null;
+
+  // Unused items (never worn)
+  const unusedItems = wardrobe.filter(item => (item.timesWorn || 0) === 0);
+
+  // Underused items (worn < 2 times)
+  const underusedItems = wardrobe.filter(item => (item.timesWorn || 0) > 0 && (item.timesWorn || 0) < 2);
+
+  // Overused items (worn > average by 2x)
+  const thresholdForOveruse = averageWearPerItem * 2;
+  const overusedItems = wardrobe.filter(item => (item.timesWorn || 0) > thresholdForOveruse);
+
+  return {
+    totalWearEvents,
+    itemsWorn,
+    mostWornItem,
+    leastWornItem,
+    averageWearPerItem: Math.round(averageWearPerItem * 100) / 100,
+    unusedItems,
+    underusedItems,
+    overusedItems
+  };
+}
+
+/**
+ * Get days since an item was last worn
+ * **Validates: Requirement 18**
+ */
+export function getDaysSinceWorn(itemId: string): DaysSinceWornResult {
+  const item = getWardrobeItemById(itemId);
+  if (!item) {
+    return { daysSince: -1, readableFormat: 'Item not found' };
+  }
+
+  if (!item.lastWorn) {
+    return { daysSince: -1, readableFormat: 'Never worn' };
+  }
+
+  const lastWornDate = new Date(item.lastWorn);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  lastWornDate.setHours(0, 0, 0, 0);
+
+  const diffTime = today.getTime() - lastWornDate.getTime();
+  const daysSince = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  let readableFormat: string;
+  if (daysSince === 0) {
+    readableFormat = 'Today';
+  } else if (daysSince === 1) {
+    readableFormat = 'Yesterday';
+  } else if (daysSince < 7) {
+    readableFormat = `${daysSince} days ago`;
+  } else if (daysSince < 30) {
+    const weeks = Math.floor(daysSince / 7);
+    readableFormat = `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+  } else if (daysSince < 365) {
+    const months = Math.floor(daysSince / 30);
+    readableFormat = `${months} month${months > 1 ? 's' : ''} ago`;
+  } else {
+    const years = Math.floor(daysSince / 365);
+    readableFormat = `${years} year${years > 1 ? 's' : ''} ago`;
+  }
+
+  return { daysSince, readableFormat };
+}
+
+/**
+ * Get wear streak for an item
+ * **Validates: Requirement 18**
+ */
+export function getWearStreak(itemId: string): WearStreak {
+  const db = getDb();
+  const wearEvents = db.wearEvents;
+  const itemWearDates = wearEvents
+    .filter(event => event.itemIds.includes(itemId))
+    .map(event => event.wornDate || event.timestamp?.split('T')[0] || '')
+    .filter(date => date !== '')
+    .sort()
+    .reverse();
+
+  let currentStreak = 0;
+  let longestStreak = 0;
+  let currentStreakDates: string[] = [];
+  let longestStreakDates: string[] = [];
+
+  if (itemWearDates.length === 0) {
+    return { currentStreak: 0, longestStreak: 0, currentStreakDates: [], longestStreakDates: [] };
+  }
+
+  // Count consecutive days from most recent
+  let prevDate = new Date(itemWearDates[0]);
+  currentStreakDates = [itemWearDates[0]];
+  currentStreak = 1;
+
+  for (let i = 1; i < itemWearDates.length; i++) {
+    const currentDate = new Date(itemWearDates[i]);
+    const daysBetween = Math.floor((prevDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysBetween === 1) {
+      currentStreak++;
+      currentStreakDates.push(itemWearDates[i]);
+      prevDate = currentDate;
+    } else {
+      break;
+    }
+  }
+
+  // Find longest streak overall
+  longestStreak = currentStreak;
+  longestStreakDates = [...currentStreakDates];
+
+  // Scan for other streaks
+  let tempStreak = 1;
+  let tempStreakDates = [itemWearDates[0]];
+
+  for (let i = 1; i < itemWearDates.length; i++) {
+    const currentDate = new Date(itemWearDates[i]);
+    const prevDateInLoop = new Date(itemWearDates[i - 1]);
+    const daysBetween = Math.floor((prevDateInLoop.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysBetween === 1) {
+      tempStreak++;
+      tempStreakDates.push(itemWearDates[i]);
+    } else {
+      if (tempStreak > longestStreak) {
+        longestStreak = tempStreak;
+        longestStreakDates = [...tempStreakDates];
+      }
+      tempStreak = 1;
+      tempStreakDates = [itemWearDates[i]];
+    }
+  }
+
+  if (tempStreak > longestStreak) {
+    longestStreak = tempStreak;
+    longestStreakDates = [...tempStreakDates];
+  }
+
+  return {
+    currentStreak,
+    longestStreak,
+    currentStreakDates,
+    longestStreakDates
+  };
+}
+
+/**
+ * Get seasonal usage analysis
+ * **Validates: Requirement 18**
+ */
+export function getSeasonalUsage(): SeasonalUsageData[] {
+  const db = getDb();
+  const wearEvents = db.wearEvents;
+  const wardrobe = db.wardrobe;
+
+  const seasons = ['Spring', 'Summer', 'Fall', 'Winter'];
+  const seasonalData: SeasonalUsageData[] = [];
+
+  seasons.forEach(season => {
+    const monthsInSeason = getMonthsForSeason(season);
+    const seasonWearEvents = wearEvents.filter(event => {
+      const eventDate = new Date(event.wornDate || event.timestamp || '');
+      const eventMonth = eventDate.getMonth() + 1;
+      return monthsInSeason.includes(eventMonth);
+    });
+
+    const itemsUsedInSeason = new Set<string>();
+    seasonWearEvents.forEach(event => {
+      event.itemIds.forEach(itemId => itemsUsedInSeason.add(itemId));
+    });
+
+    // Find underutilized seasonal items
+    const underutilizedItems: string[] = [];
+    wardrobe.forEach(item => {
+      if (item.seasonality?.includes(season)) {
+        const wears = wearEvents.filter(e => e.itemIds.includes(item.id) && 
+          monthsInSeason.includes(new Date(e.wornDate || e.timestamp || '').getMonth() + 1)
+        ).length;
+        if (wears < 2) {
+          underutilizedItems.push(item.id);
+        }
+      }
+    });
+
+    const avgWearPerItem = itemsUsedInSeason.size > 0
+      ? seasonWearEvents.reduce((sum, event) => sum + event.itemIds.length, 0) / itemsUsedInSeason.size
+      : 0;
+
+    seasonalData.push({
+      season,
+      itemsUsed: itemsUsedInSeason.size,
+      totalWearEvents: seasonWearEvents.length,
+      averageWearPerItem: Math.round(avgWearPerItem * 100) / 100,
+      underutilizedItems
+    });
+  });
+
+  return seasonalData;
+}
+
+/**
+ * Helper: Get months for a season
+ */
+function getMonthsForSeason(season: string): number[] {
+  const seasonMonths: Record<string, number[]> = {
+    'Spring': [3, 4, 5],
+    'Summer': [6, 7, 8],
+    'Fall': [9, 10, 11],
+    'Winter': [12, 1, 2]
+  };
+  return seasonMonths[season] || [];
+}
+
+/**
+ * Get item wear history
+ * **Validates: Requirement 18**
+ */
+export function getItemWearHistory(itemId: string) {
+  const item = getWardrobeItemById(itemId);
+  if (!item) return null;
+
+  const db = getDb();
+  const itemWearEvents = db.wearEvents
+    .filter(event => event.itemIds.includes(itemId))
+    .map(event => ({
+      date: event.wornDate || event.timestamp?.split('T')[0] || '',
+      occasion: event.occasion,
+      feedback: event.feedback,
+      weather: event.weather,
+      temperature: event.temperature
+    }));
+
+  const daysSinceWorn = getDaysSinceWorn(itemId);
+  const wearStreak = getWearStreak(itemId);
+
+  return {
+    item,
+    timesWorn: item.timesWorn || 0,
+    lastWornDate: item.lastWorn,
+    daysSinceLast: daysSinceWorn.daysSince,
+    daysSinceLastReadable: daysSinceWorn.readableFormat,
+    wearEvents: itemWearEvents,
+    currentStreak: wearStreak.currentStreak,
+    longestStreak: wearStreak.longestStreak
   };
 }

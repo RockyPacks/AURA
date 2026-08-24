@@ -131,6 +131,32 @@ export interface ProfileAnalytics {
   primaryArchetype: string;
 }
 
+export interface FieldConfidence {
+  field: string;
+  confidence: number;
+  isLowConfidence: boolean;
+}
+
+export interface AnalyzedGarmentResult {
+  name: string;
+  category: GarmentCategory;
+  subcategory: string;
+  colorPrimary: string;
+  colorSecondary?: string;
+  pattern: string;
+  material: string;
+  brand: string | null;
+  silhouette?: string;
+  fit?: string;
+  formalityScore: number;
+  seasonality: string[];
+  estimatedValueUSD: number;
+  condition: 'New' | 'Excellent' | 'Good' | 'Worn';
+  confidence: number;
+  styleDescriptors?: string[];
+  fieldConfidences?: FieldConfidence[];
+}
+
 export interface ADRItem {
   id: string;
   title: string;

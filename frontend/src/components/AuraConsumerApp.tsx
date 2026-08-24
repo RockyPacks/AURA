@@ -88,6 +88,10 @@ export const AuraConsumerApp: React.FC = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [detectedQueue, setDetectedQueue] = useState<{ preview: string; data: Partial<WardrobeItem> }[]>([]);
   const [scanStatusText, setScanStatusText] = useState('');
+  
+  // AI Correction Interface state
+  const [currentCorrectionIndex, setCurrentCorrectionIndex] = useState<number | null>(null);
+  const [correctionFormData, setCorrectionFormData] = useState<Partial<WardrobeItem>>({});
 
   // Shopping Engine State
   const [shopQuery, setShopQuery] = useState('Acne Studios Oversized Knit Sweater');
@@ -226,46 +230,61 @@ export const AuraConsumerApp: React.FC = () => {
     });
   };
 
-  const saveDetectedItemToWardrobe = async (index: number) => {
-    const target = detectedQueue[index];
+  const saveDetectedItemToWardrobe = async () => {
+    if (currentCorrectionIndex === null) return;
+    const target = detectedQueue[currentCorrectionIndex];
     if (!target) return;
+
+    // Merge AI detection with user corrections
+    const correctedData = { ...target.data, ...correctionFormData };
 
     const newItem: WardrobeItem = {
       id: `item-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      name: target.data.name || 'Tailored Garment',
-      category: target.data.category || 'Tops',
-      subcategory: target.data.subcategory || 'Garment',
-      colorPrimary: target.data.colorPrimary || '#1E293B',
-      colorSecondary: target.data.colorSecondary,
-      pattern: target.data.pattern || 'Solid',
-      material: target.data.material || 'Natural Fiber',
-      brand: target.data.brand || null,
-      formalityScore: target.data.formalityScore || 6,
-      seasonality: target.data.seasonality || ['Spring', 'Fall', 'Winter'],
-      estimatedValueUSD: target.data.estimatedValueUSD || 150,
-      condition: target.data.condition || 'Excellent',
+      name: correctedData.name || 'Tailored Garment',
+      category: correctedData.category || 'Tops',
+      subcategory: correctedData.subcategory || 'Garment',
+      colorPrimary: correctedData.colorPrimary || '#1E293B',
+      colorSecondary: correctedData.colorSecondary,
+      pattern: correctedData.pattern || 'Solid',
+      material: correctedData.material || 'Natural Fiber',
+      brand: correctedData.brand || null,
+      formalityScore: correctedData.formalityScore || 6,
+      seasonality: correctedData.seasonality || ['Spring', 'Fall', 'Winter'],
+      estimatedValueUSD: correctedData.estimatedValueUSD || 150,
+      condition: correctedData.condition || 'Excellent',
       timesWorn: 0,
       isDirty: false,
       status: 'clean',
       dateAdded: new Date().toISOString().split('T')[0],
       aiMetadata: {
-        confidence: (target.data as any).confidence || target.data.aiMetadata?.confidence || 0.88,
+        confidence: (target.data as any).confidence || (target.data as any).aiMetadata?.confidence || 0.88,
         detectedCategory: target.data.category
-      }
+      },
+      imageUrl: target.preview
     };
 
     const saved = await saveWardrobeItem(newItem);
     setWardrobe(prev => [saved, ...prev]);
-    setDetectedQueue(prev => prev.filter((_, i) => i !== index));
+    
+    // Remove from queue and close correction modal
+    setDetectedQueue(prev => prev.filter((_, i) => i !== currentCorrectionIndex));
+    setCurrentCorrectionIndex(null);
+    setCorrectionFormData({});
 
     // Refresh analytics & outfits
     const analytics = await fetchProfileAnalytics();
     setProfileAnalytics(analytics);
     generateOutfitsForContext(context, [saved, ...wardrobe]);
 
+    // Close scanner if no more items
     if (detectedQueue.length <= 1) {
       setIsScannerOpen(false);
     }
+  };
+
+  const openCorrectionModal = (index: number) => {
+    setCurrentCorrectionIndex(index);
+    setCorrectionFormData(detectedQueue[index].data);
   };
 
   // 6. Wardrobe Item CRUD Operations
@@ -1370,9 +1389,9 @@ export const AuraConsumerApp: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* SEAMLESS VISION INGESTION MODAL (Priority 2: Multi-Image) */}
+      {/* SEAMLESS VISION INGESTION MODAL - MAIN SCANNER (Priority 2: Multi-Image) */}
       {/* ========================================================================= */}
-      {isScannerOpen && (
+      {isScannerOpen && currentCorrectionIndex === null && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-lg rounded-3xl bg-[#0F0F14] border border-white/10 p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
@@ -1384,6 +1403,7 @@ export const AuraConsumerApp: React.FC = () => {
                 onClick={() => {
                   setIsScannerOpen(false);
                   setDetectedQueue([]);
+                  setCurrentCorrectionIndex(null);
                 }}
                 className="text-slate-400 hover:text-white text-xs font-bold"
               >
@@ -1392,7 +1412,7 @@ export const AuraConsumerApp: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-400">
-              Select one or multiple clothing photos. AURA extracts silhouette, fabric, formality, and wardrobe synergy automatically.
+              Select one or multiple clothing photos. AURA extracts silhouette, fabric, formality, and wardrobe synergy automatically. You'll review and correct each item.
             </p>
 
             <div className="border-2 border-dashed border-white/15 hover:border-white/30 rounded-2xl p-6 text-center transition-all bg-black/40 relative">
@@ -1406,7 +1426,7 @@ export const AuraConsumerApp: React.FC = () => {
               <div className="space-y-2">
                 <Upload className="w-8 h-8 text-slate-400 mx-auto" />
                 <div className="text-xs font-bold text-slate-200">Tap or drop photos (single or multiple)</div>
-                <div className="text-[11px] text-slate-500">Supports JPG, PNG, WEBP</div>
+                <div className="text-[11px] text-slate-500">Supports JPG, PNG, WEBP (max 10MB per image)</div>
               </div>
             </div>
 
@@ -1420,29 +1440,224 @@ export const AuraConsumerApp: React.FC = () => {
             {detectedQueue.length > 0 && (
               <div className="space-y-3">
                 <span className="text-xs font-bold text-emerald-400">
-                  Ready to add ({detectedQueue.length} parsed):
+                  Detected items ({detectedQueue.length}):
                 </span>
                 {detectedQueue.map((item, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+                  <div key={idx} className="p-3.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between group hover:border-white/15 transition-all">
                     <div className="flex items-center space-x-3">
                       <img src={item.preview} alt="Garment" className="w-12 h-12 rounded-lg object-cover" />
                       <div>
                         <div className="text-xs font-bold text-white">{item.data.name}</div>
                         <div className="text-[10px] text-slate-400">
-                          {item.data.category} • {item.data.material} • Formality {item.data.formalityScore}/10
+                          {item.data.category} • {item.data.material}
                         </div>
                       </div>
                     </div>
                     <button
-                      onClick={() => saveDetectedItemToWardrobe(idx)}
-                      className="px-3.5 py-1.5 rounded-lg bg-white text-black text-xs font-bold hover:bg-slate-100 transition-all shadow"
+                      onClick={() => openCorrectionModal(idx)}
+                      className="px-3.5 py-1.5 rounded-lg bg-amber-500 text-black text-xs font-bold hover:bg-amber-400 transition-all shadow group-hover:shadow-md"
                     >
-                      Save
+                      Review
                     </button>
                   </div>
                 ))}
               </div>
             )}
+
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* AI CORRECTION MODAL - REVIEW & EDIT DETECTED METADATA */}
+      {/* ========================================================================= */}
+      {isScannerOpen && currentCorrectionIndex !== null && detectedQueue[currentCorrectionIndex] && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl rounded-3xl bg-[#0F0F14] border border-white/10 p-6 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-white">Review AI Detection</h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  Item {currentCorrectionIndex + 1} of {detectedQueue.length}
+                </p>
+              </div>
+              <button 
+                onClick={() => {
+                  setCurrentCorrectionIndex(null);
+                  setCorrectionFormData({});
+                }}
+                className="text-slate-400 hover:text-white text-xs font-bold"
+              >
+                ✕ Cancel
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              
+              {/* Image Preview */}
+              <div className="space-y-3">
+                <span className="text-xs font-bold text-slate-400 uppercase">Image</span>
+                <img 
+                  src={detectedQueue[currentCorrectionIndex].preview} 
+                  alt="Garment" 
+                  className="w-full rounded-2xl object-cover aspect-square border border-white/10" 
+                />
+                <div className="text-[11px] text-slate-400 bg-white/5 rounded-lg p-2.5">
+                  <strong className="text-white">AI Confidence:</strong> {Math.round((correctionFormData as any).confidence * 100 || 88)}%
+                </div>
+              </div>
+
+              {/* Correction Form */}
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-300 block mb-1.5">Name</label>
+                  <input
+                    type="text"
+                    value={correctionFormData.name || ''}
+                    onChange={(e) => setCorrectionFormData(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                    placeholder="e.g. Merino Wool Crewneck"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Category</label>
+                    <select
+                      value={correctionFormData.category || 'Tops'}
+                      onChange={(e) => setCorrectionFormData(prev => ({ ...prev, category: e.target.value as any }))}
+                      className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                    >
+                      <option value="Tops">Tops</option>
+                      <option value="Bottoms">Bottoms</option>
+                      <option value="Outerwear">Outerwear</option>
+                      <option value="Shoes">Shoes</option>
+                      <option value="Accessories">Accessories</option>
+                      <option value="One-Piece">One-Piece</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Subcategory</label>
+                    <input
+                      type="text"
+                      value={correctionFormData.subcategory || ''}
+                      onChange={(e) => setCorrectionFormData(prev => ({ ...prev, subcategory: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                      placeholder="e.g. Sweater"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Primary Color</label>
+                    <input
+                      type="text"
+                      value={correctionFormData.colorPrimary || ''}
+                      onChange={(e) => setCorrectionFormData(prev => ({ ...prev, colorPrimary: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                      placeholder="e.g. #1E293B"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Pattern</label>
+                    <select
+                      value={correctionFormData.pattern || 'Solid'}
+                      onChange={(e) => setCorrectionFormData(prev => ({ ...prev, pattern: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                    >
+                      <option value="Solid">Solid</option>
+                      <option value="Striped">Striped</option>
+                      <option value="Checkered">Checkered</option>
+                      <option value="Graphic">Graphic</option>
+                      <option value="Ribbed">Ribbed</option>
+                      <option value="Textured">Textured</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-slate-300 block mb-1.5">Material</label>
+                  <input
+                    type="text"
+                    value={correctionFormData.material || ''}
+                    onChange={(e) => setCorrectionFormData(prev => ({ ...prev, material: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                    placeholder="e.g. 100% Virgin Wool"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Brand</label>
+                    <input
+                      type="text"
+                      value={correctionFormData.brand || ''}
+                      onChange={(e) => setCorrectionFormData(prev => ({ ...prev, brand: e.target.value || null }))}
+                      className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                      placeholder="Optional"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Formality (1-10)</label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={correctionFormData.formalityScore || 6}
+                      onChange={(e) => setCorrectionFormData(prev => ({ ...prev, formalityScore: parseInt(e.target.value) || 6 }))}
+                      className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-slate-300 block mb-1.5">Condition</label>
+                  <select
+                    value={correctionFormData.condition || 'Excellent'}
+                    onChange={(e) => setCorrectionFormData(prev => ({ ...prev, condition: e.target.value as any }))}
+                    className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                  >
+                    <option value="New">New</option>
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good">Good</option>
+                    <option value="Worn">Worn</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-slate-300 block mb-1.5">Estimated Value (USD)</label>
+                  <input
+                    type="number"
+                    value={correctionFormData.estimatedValueUSD || 150}
+                    onChange={(e) => setCorrectionFormData(prev => ({ ...prev, estimatedValueUSD: parseInt(e.target.value) || 150 }))}
+                    className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+                  />
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3 pt-4 border-t border-white/10">
+              <button
+                onClick={() => {
+                  setCurrentCorrectionIndex(null);
+                  setCorrectionFormData({});
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-sm font-semibold transition-all"
+              >
+                Skip This Item
+              </button>
+              <button
+                onClick={saveDetectedItemToWardrobe}
+                className="flex-1 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-black text-sm font-bold transition-all shadow-lg flex items-center justify-center space-x-2"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Save to Wardrobe</span>
+              </button>
+            </div>
 
           </div>
         </div>
