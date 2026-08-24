@@ -1,6 +1,11 @@
 import { GoogleGenAI } from '@google/genai';
 import { WardrobeItem, ContextInput, GeneratedOutfit, ShoppingAnalysis, GarmentCategory } from './types.js';
 import { getAllWardrobeItems, getWearEvents } from './store.js';
+import { 
+  generateFashionEmbedding, 
+  cosineSimilarity, 
+  findWardrobeDuplicates 
+} from './services/fashionEmbedding.js';
 
 // Explanation generation cache: hash(itemIds) -> { explanation, generatedAt }
 const explanationCache = new Map<string, { explanation: string; generatedAt: string; generatedBy: string }>();
@@ -748,7 +753,7 @@ Return ONLY a valid JSON object matching this schema:
             isLowConfidence: fc.confidence < 0.7
           }));
 
-          return {
+          const partialItem = {
             name: item.name || 'Garment Piece',
             category: item.category || 'Tops',
             subcategory: item.subcategory || 'Piece',
@@ -769,6 +774,11 @@ Return ONLY a valid JSON object matching this schema:
             fieldConfidences: fieldConfs,
             imageUrl: imageBase64
           };
+
+          return {
+            ...partialItem,
+            embedding: generateFashionEmbedding(partialItem)
+          };
         });
 
         return {
@@ -782,9 +792,9 @@ Return ONLY a valid JSON object matching this schema:
   }
 
   // Graceful fallback single garment
-  const fallbackSingle: AnalyzedGarmentResult = {
+  const fallbackSingleRaw = {
     name: 'Fine Knit Merino Crewneck',
-    category: 'Tops',
+    category: 'Tops' as GarmentCategory,
     subcategory: 'Knitwear',
     colorPrimary: '#27272A',
     pattern: 'Solid',
@@ -795,10 +805,10 @@ Return ONLY a valid JSON object matching this schema:
     formalityScore: 6,
     seasonality: ['Fall', 'Winter', 'Spring'],
     estimatedValueUSD: 160,
-    condition: 'Excellent',
+    condition: 'Excellent' as const,
     confidence: 0.82,
     styleDescriptors: ['Minimalist', 'Timeless'],
-    box2d: [50, 100, 950, 900],
+    box2d: [50, 100, 950, 900] as [number, number, number, number],
     fieldConfidences: [
       { field: 'colorPrimary', confidence: 0.85, isLowConfidence: false },
       { field: 'material', confidence: 0.75, isLowConfidence: false },
@@ -806,6 +816,11 @@ Return ONLY a valid JSON object matching this schema:
       { field: 'fit', confidence: 0.65, isLowConfidence: true }
     ],
     imageUrl: imageBase64
+  };
+
+  const fallbackSingle: AnalyzedGarmentResult = {
+    ...fallbackSingleRaw,
+    embedding: generateFashionEmbedding(fallbackSingleRaw)
   };
 
   return {
@@ -1336,17 +1351,28 @@ export async function analyzeShoppingItem(
   const wardrobe = getAllWardrobeItems();
   const cleanWardrobe = wardrobe.filter(i => i.status !== 'in_wash' && !i.isDirty);
 
-  const lowerName = name.toLowerCase();
-  const duplicateCandidates = wardrobe.filter(existing => {
-    const existingLower = existing.name.toLowerCase();
-    const sameCat = existing.category === category;
-    const sameSubcat = existing.subcategory && lowerName.includes(existing.subcategory.toLowerCase());
-    const similarKeywords = existingLower.split(' ').filter(w => w.length > 3 && lowerName.includes(w));
-    return sameCat && (sameSubcat || similarKeywords.length >= 2);
-  });
+  // Generate mathematical visual & style embedding for candidate purchase
+  const candidateItem: Partial<WardrobeItem> = {
+    name,
+    category,
+    subcategory: name,
+    estimatedValueUSD: priceUSD,
+    imageUrl: imageBase64
+  };
+  const targetEmbedding = generateFashionEmbedding(candidateItem);
 
-  const duplicateRisk: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' = 
-    duplicateCandidates.length >= 2 ? 'HIGH' : duplicateCandidates.length === 1 ? 'MEDIUM' : 'NONE';
+  // Compute vector cosine similarity against all items in wardrobe
+  const duplicateMatches = findWardrobeDuplicates(targetEmbedding, wardrobe, 0.72);
+  const topMatch = duplicateMatches.length > 0 ? duplicateMatches[0] : null;
+
+  let duplicateRisk: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' = 'NONE';
+  if (topMatch && (topMatch.similarity >= 0.88 || duplicateMatches.length >= 2)) {
+    duplicateRisk = 'HIGH';
+  } else if (topMatch && topMatch.similarity >= 0.74) {
+    duplicateRisk = 'MEDIUM';
+  } else if (topMatch && topMatch.similarity >= 0.68) {
+    duplicateRisk = 'LOW';
+  }
 
   let complementaryItems: WardrobeItem[] = [];
   if (category === 'Tops') {
@@ -1390,17 +1416,17 @@ export async function analyzeShoppingItem(
   let verdictSub = '';
   const reasoning: string[] = [];
 
-  if (duplicateRisk === 'HIGH') {
+  if (duplicateRisk === 'HIGH' && topMatch) {
     verdictType = 'SKIP';
-    verdictHeadline = `SKIP — YOU ALREADY OWN ${duplicateCandidates.length} NEAR DUPLICATES`;
-    verdictSub = `You currently own ${duplicateCandidates.map(d => d.name).join(' and ')}. Purchasing this piece delivers near 0% new aesthetic versatility.`;
-    reasoning.push(`High functional overlap with ${duplicateCandidates[0]?.name}`);
+    verdictHeadline = `SKIP — ${topMatch.similarityPercentage}% VISUAL DUPLICATE OVERLAP`;
+    verdictSub = `You currently own ${topMatch.item.name} (${topMatch.similarityPercentage}% similarity match). Purchasing this piece delivers near 0% new aesthetic versatility.`;
+    reasoning.push(`${topMatch.similarityPercentage}% visual similarity match with your ${topMatch.item.name}`);
     reasoning.push('Zero new silhouette versatility added to your closet');
-  } else if (duplicateRisk === 'MEDIUM') {
+  } else if (duplicateRisk === 'MEDIUM' && topMatch) {
     verdictType = 'CONSIDER';
-    verdictHeadline = `CONSIDER — MODERATE DUPLICATE OVERLAP`;
-    verdictSub = `Shares stylistic overlap with ${duplicateCandidates[0]?.name}. Only buy if upgrading material or fit.`;
-    reasoning.push(`Similar to your ${duplicateCandidates[0]?.name}`);
+    verdictHeadline = `CONSIDER — ${topMatch.similarityPercentage}% STYLE OVERLAP`;
+    verdictSub = `Shares ${topMatch.similarityPercentage}% style fingerprint with your ${topMatch.item.name}. Only buy if intentionally upgrading material or fit.`;
+    reasoning.push(`${topMatch.similarityPercentage}% style overlap with your ${topMatch.item.name}`);
     reasoning.push(`Unlocks ${unlockedCount} combinations with existing wardrobe`);
   } else if (unlockedCount >= 6) {
     verdictType = 'BUY';
@@ -1427,9 +1453,15 @@ export async function analyzeShoppingItem(
     costPerWear,
     unlockedOutfits: unlockedCount,
     duplicateRisk,
-    duplicateItemNames: duplicateCandidates.map(d => d.name),
-    pairedItems: complementaryItems.slice(0, 3),
-    compatibleItemIds: complementaryItems.slice(0, 5).map(i => i.id),
+    duplicateItemNames: duplicateMatches.map(d => `${d.item.name} (${d.similarityPercentage}% match)`),
+    topDuplicateMatch: topMatch ? {
+      id: topMatch.item.id,
+      name: topMatch.item.name,
+      similarityPercentage: topMatch.similarityPercentage
+    } : undefined,
+    similarityScore: topMatch ? topMatch.similarityPercentage : undefined,
+    pairedItems: complementaryItems.slice(0, 4),
+    compatibleItemIds: complementaryItems.map(i => i.id),
     reasoning,
     createdAt: new Date().toISOString()
   };

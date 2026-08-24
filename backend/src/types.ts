@@ -22,6 +22,7 @@ export interface WardrobeItem {
   isDirty?: boolean;
   status?: GarmentStatus;
   imageUrl?: string;
+  embedding?: number[]; // 512-dim normalized fashion visual vector
   dateAdded: string;
   createdAt?: string;
   updatedAt?: string;
@@ -58,11 +59,11 @@ export interface GeneratedOutfit {
   items?: WardrobeItem[];
   itemNames?: string[];
   formalityScore: number;
-  weatherMatchScore: number;
+  weatherMatchScore?: number;
   confidenceScore: number;
   confidenceBoostScore?: number;
-  compatibilityScore?: number;
-  scoringBreakdown?: ScoringBreakdown;
+  compatibilityScore: number;
+  scoringBreakdown: ScoringBreakdown;
   whyReasons: string[];
   heroImageUrl?: string;
   createdAt?: string;
@@ -107,6 +108,8 @@ export interface ShoppingAnalysis {
   unlockedOutfits: number;
   duplicateRisk: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH';
   duplicateItemNames?: string[];
+  topDuplicateMatch?: { id: string; name: string; similarityPercentage: number };
+  similarityScore?: number;
   pairedItems: WardrobeItem[];
   compatibleItemIds?: string[];
   reasoning: string[];

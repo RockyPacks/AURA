@@ -11,6 +11,7 @@ import {
   WearStreak,
   SeasonalUsageData
 } from './types.js';
+import { generateFashionEmbedding } from './services/fashionEmbedding.js';
 
 const DB_DIR = path.resolve(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'aura_database.json');
@@ -280,8 +281,13 @@ export function getWardrobeItemById(id: string): WardrobeItem | undefined {
 export function addWardrobeItem(item: WardrobeItem): WardrobeItem {
   const db = getDb();
   const now = new Date().toISOString();
+  const embedding = item.embedding && item.embedding.length === 512
+    ? item.embedding
+    : generateFashionEmbedding(item);
+
   const newItem: WardrobeItem = {
     ...item,
+    embedding,
     createdAt: item.createdAt || now,
     updatedAt: now,
     timesWorn: item.timesWorn || 0,
@@ -307,9 +313,17 @@ export function updateWardrobeItem(id: string, updates: Partial<WardrobeItem>): 
     ? updates.status 
     : (isDirty ? 'in_wash' : 'clean');
 
+  const merged = { ...current, ...updates };
+  const embedding = updates.embedding || (
+    (updates.name || updates.category || updates.colorPrimary || updates.material) 
+      ? generateFashionEmbedding(merged)
+      : current.embedding || generateFashionEmbedding(merged)
+  );
+
   const updated: WardrobeItem = {
     ...current,
     ...updates,
+    embedding,
     isDirty,
     status,
     updatedAt: new Date().toISOString()

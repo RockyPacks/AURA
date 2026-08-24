@@ -1168,21 +1168,40 @@ export const AuraConsumerApp: React.FC = () => {
               {shoppingAnalysis ? (
                 <div className="space-y-6">
                   <div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider inline-block mb-3 ${
-                      shoppingAnalysis.verdictType === 'BUY'
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                        : shoppingAnalysis.verdictType === 'SKIP'
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                    }`}>
-                      {shoppingAnalysis.verdict}
-                    </span>
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider inline-block ${
+                        shoppingAnalysis.verdictType === 'BUY'
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          : shoppingAnalysis.verdictType === 'SKIP'
+                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                      }`}>
+                        {shoppingAnalysis.verdict}
+                      </span>
+                      {shoppingAnalysis.topDuplicateMatch && (
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/10 text-slate-200 border border-white/15 flex items-center space-x-1">
+                          <span>🎯 {shoppingAnalysis.topDuplicateMatch.similarityPercentage}% Similarity Match</span>
+                        </span>
+                      )}
+                    </div>
                     <h3 className="text-2xl font-bold text-white">{shoppingAnalysis.title}</h3>
                   </div>
 
                   <p className="text-xs text-slate-300 bg-white/5 p-4 rounded-xl border border-white/5 leading-relaxed">
                     {shoppingAnalysis.verdictSub}
                   </p>
+
+                  {shoppingAnalysis.topDuplicateMatch && (
+                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-200 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm">⚠️</span>
+                        <span>Existing piece: <strong>{shoppingAnalysis.topDuplicateMatch.name}</strong></span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold text-[10px]">
+                        {shoppingAnalysis.topDuplicateMatch.similarityPercentage}% Match
+                      </span>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-3 gap-3">
                     <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">

@@ -40,6 +40,7 @@ export interface WardrobeItem {
   isDirty?: boolean;
   status?: GarmentStatus;
   imageUrl?: string;
+  embedding?: number[]; // 512-dim visual & stylistic fashion vector
   dateAdded: string;
   createdAt?: string;
   updatedAt?: string;
@@ -109,6 +110,8 @@ export interface ShoppingAnalysis {
   unlockedOutfits: number;
   duplicateRisk: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH';
   duplicateItemNames?: string[];
+  topDuplicateMatch?: { id: string; name: string; similarityPercentage: number };
+  similarityScore?: number;
   pairedItems: WardrobeItem[];
   compatibleItemIds?: string[];
   reasoning: string[];
